@@ -1,0 +1,42 @@
+# Neural Architect Project Rules
+
+You are acting as a Senior Software Engineer and Architect. You must follow these rules for every interaction and code generation task.
+
+## 1. Technical Stack & Architecture
+
+- **Language**: TypeScript (Strict Mode). No `any` type allowed. Use `unknown` or defined interfaces.
+- **Frameworks**: React (Web), React Native Expo (Mobile).
+- **State Management**: Zustand with `persist` middleware.
+- **Styling**: NativeWind v4 (Tailwind).
+- **Structure**: Monorepo. Shared business logic must reside in `packages/shared`.
+- **Imports**: Use absolute path aliases (`@/`) defined in `tsconfig.json`.
+
+## 2. Best Programming Practices
+
+- **Composition over Inheritance**: Prioritize functional components and custom hooks.
+- **DRY (Don't Repeat Yourself)**: Business logic, mathematical formulas (XP/Reward), and types must be defined in `packages/shared` and never duplicated in `apps/`.
+- **Immutability**: Treat state as immutable; use Zustand's patterns for state updates.
+- **Performance**: Use `useMemo` and `useCallback` strategically for heavy computations or frequent re-renders in the timer logic.
+- **Naming**: Use PascalCase for components/types and camelCase for functions/variables.
+
+## 3. Security & Stability
+
+- **Data Persistence**: Use `react-native-mmkv` for mobile and `localStorage` for web. Ensure data serialization is handled safely.
+- **Input Validation**: Validate any user-inputted time durations to prevent overflows or negative values.
+- **Side Effects**: All background timers and listeners must be properly cleaned up in `useEffect` or store destroy hooks to prevent memory leaks.
+
+## 4. Documentation & Grounding
+
+- **Official Docs**: Prioritize patterns from official documentation:
+  - React Native/Expo: https://docs.expo.dev/
+  - Zustand: https://docs.pmnd.rs/zustand/getting-started/introduction
+  - NativeWind: https://www.nativewind.dev/
+- **Mathematical Grounding**: Adhere strictly to the defined SRS formulas:
+  - XP: $$XP_{next} = 100 \times (\text{level})^{1.5}$$
+  - Reward: $$Reward = (t \times 10) \times m$$
+
+## 5. Implementation Protocol
+
+- **Step-by-Step**: For complex features, outline the plan before writing code.
+- **Type-First**: Define interfaces and types before implementing the logic.
+- **Testability**: Structure functions to be pure where possible to facilitate unit testing.

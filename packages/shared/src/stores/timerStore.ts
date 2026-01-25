@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, PersistOptions } from 'zustand/middleware';
 import type { TimerState, TimerPhase, TimerConfig } from '../types';
 
-interface TimerStore extends TimerState {
+export interface TimerStore extends TimerState {
   start: () => void;
   pause: () => void;
   resume: () => void;

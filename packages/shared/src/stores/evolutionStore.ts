@@ -9,7 +9,7 @@ import {
   calculateTotalExperienceForLevel 
 } from '../constants/evolution';
 
-interface EvolutionStore extends EvolutionState {
+export interface EvolutionStore extends EvolutionState {
   addExperience: (amount: number) => void;
   levelUp: () => void;
   unlockFeature: (featureId: string) => void;

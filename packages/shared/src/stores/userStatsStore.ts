@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, PersistOptions } from 'zustand/middleware';
 import type { UserStats, Achievement, UserPreferences } from '../types';
 
-interface UserStatsStore extends UserStats {
+export interface UserStatsStore extends UserStats {
   addWorkTime: (seconds: number) => void;
   incrementSessions: () => void;
   updateStreak: () => void;

@@ -1,10 +1,9 @@
-import { Storage } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
 import { createTimerStore, createEvolutionStore, createUserStatsStore } from '@neural-architect/shared/stores';
 
 const storage = new MMKV();
 
-const mmkvStorage: Storage = {
+const mmkvStorage = {
   getItem: (name: string) => {
     const value = storage.getString(name);
     return value ? JSON.parse(value) : null;

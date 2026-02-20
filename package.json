@@ -2,17 +2,16 @@
   "name": "neural-architect",
   "version": "0.1.0",
   "private": true,
-  "description": "Gamified Pomodoro application with cross-platform support",
+  "description": "Gamified Pomodoro web application",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
     "dev:web": "npm run dev --workspace=apps/web",
-    "dev:mobile": "npm run start --workspace=apps/mobile",
+    "build:shared": "npm run build --workspace=packages/shared",
     "build:web": "npm run build --workspace=apps/web",
-    "build:mobile": "npm run build --workspace=apps/mobile",
-    "type-check": "npm run type-check --workspaces --if-present",
+    "type-check": "npm run build:shared && npm run type-check --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present"
   },
   "devDependencies": {

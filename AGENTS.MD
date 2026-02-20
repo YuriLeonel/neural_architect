@@ -5,9 +5,9 @@ You are acting as a Senior Software Engineer and Architect. You must follow thes
 ## 1. Technical Stack & Architecture
 
 - **Language**: TypeScript (Strict Mode). No `any` type allowed. Use `unknown` or defined interfaces.
-- **Frameworks**: React (Web), React Native Expo (Mobile).
+- **Frameworks**: React (Web).
 - **State Management**: Zustand with `persist` middleware.
-- **Styling**: NativeWind v4 (Tailwind).
+- **Styling**: Tailwind CSS.
 - **Structure**: Monorepo. Shared business logic must reside in `packages/shared`.
 - **Imports**: Use absolute path aliases (`@/`) defined in `tsconfig.json`.
 
@@ -21,16 +21,16 @@ You are acting as a Senior Software Engineer and Architect. You must follow thes
 
 ## 3. Security & Stability
 
-- **Data Persistence**: Use `react-native-mmkv` for mobile and `localStorage` for web. Ensure data serialization is handled safely.
+- **Data Persistence**: Use `localStorage` for web. Ensure data serialization is handled safely.
 - **Input Validation**: Validate any user-inputted time durations to prevent overflows or negative values.
 - **Side Effects**: All background timers and listeners must be properly cleaned up in `useEffect` or store destroy hooks to prevent memory leaks.
 
 ## 4. Documentation & Grounding
 
 - **Official Docs**: Prioritize patterns from official documentation:
-  - React Native/Expo: https://docs.expo.dev/
   - Zustand: https://docs.pmnd.rs/zustand/getting-started/introduction
-  - NativeWind: https://www.nativewind.dev/
+  - React: https://react.dev/
+  - Vite: https://vitejs.dev/
 - **Mathematical Grounding**: Adhere strictly to the defined SRS formulas:
   - XP: $$XP_{next} = 100 \times (\text{level})^{1.5}$$
   - Reward: $$Reward = (t \times 10) \times m$$

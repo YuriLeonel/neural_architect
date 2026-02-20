@@ -2,130 +2,75 @@
 
 ## Project Structure
 
-```
+```text
 neural-architect/
 ├── apps/
-│   ├── web/                    # React Web App (Vite + TypeScript)
-│   │   ├── src/
-│   │   │   ├── stores/         # Platform-specific store setup (localStorage)
-│   │   │   └── ...
-│   │   └── ...
-│   └── mobile/                 # React Native App (Expo + TypeScript)
-│       ├── src/
-│       │   ├── stores/         # Platform-specific store setup (MMKV)
-│       │   └── ...
-│       └── ...
+│   └── web/                    # React Web App (Vite + TypeScript)
 ├── packages/
-│   └── shared/                 # Shared Code Package
-│       ├── src/
-│       │   ├── stores/         # Zustand store factories
-│       │   ├── types/         # TypeScript interfaces
-│       │   └── constants/     # Evolution formulas & constants
-│       └── ...
+│   └── shared/                 # Shared code and business logic
 ├── tailwind.config.js          # Global design tokens
 └── tsconfig.json               # Base TypeScript config
 ```
 
 ## Installation
 
-1. **Install dependencies:**
+1. Install dependencies:
    ```bash
    npm install
    ```
-
-2. **Build shared package:**
+2. Build shared package:
    ```bash
    npm run build --workspace=packages/shared
    ```
 
 ## Development
 
-### Web App
+Run the web app from repository root:
+
 ```bash
 npm run dev:web
 ```
-Starts the Vite dev server at `http://localhost:5173`
 
-### Mobile App
-```bash
-npm run dev:mobile
-```
-Starts the Expo development server
+The Vite dev server starts at `http://localhost:5173`.
 
 ## Architecture Overview
 
 ### State Management (Zustand)
 
-The project uses Zustand with platform-specific persistence:
+The project uses Zustand with web persistence:
 
-- **Web**: Uses `localStorage` (configured in `apps/web/src/stores/setup.ts`)
-- **Mobile**: Uses `MMKV` (configured in `apps/mobile/src/stores/setup.tsx`)
+- Web: `localStorage` via `apps/web/src/stores/setup.ts`
 
-#### Available Stores
+### Available Stores
 
-1. **Timer Store** (`createTimerStore`)
-   - Manages Pomodoro timer state
-   - Tracks work/break phases
-   - Handles start/pause/reset actions
-
-2. **Evolution Store** (`createEvolutionStore`)
-   - Tracks neural network growth
-   - Manages experience points and leveling
-   - Handles architecture tier progression
-
-3. **User Stats Store** (`createUserStatsStore`)
-   - Tracks user statistics
-   - Manages streaks and achievements
-   - Stores user preferences
+1. `createTimerStore` - Pomodoro timer state and actions
+2. `createEvolutionStore` - network growth and progression
+3. `createUserStatsStore` - user stats, streaks, and achievements
 
 ### TypeScript Interfaces
 
-All shared types are defined in `packages/shared/src/types/`:
-
-- `TimerState` - Timer configuration and state
-- `EvolutionState` - Neural network evolution state
-- `UserStats` - User statistics and achievements
+Shared interfaces live in `packages/shared/src/types/`.
 
 ### Evolution Constants
 
-Mathematical models for progression are in `packages/shared/src/constants/evolution.ts`:
+Mathematical progression logic is in `packages/shared/src/constants/`.
 
-- `calculateLevel()` - Calculate level from total experience
-- `calculateExperienceToNextLevel()` - Experience needed for next level
-- `calculateNeuronCount()` - Neurons at a given level
-- `calculateConnectionCount()` - Connections at a given level
+### Styling (Tailwind CSS)
 
-### Styling (NativeWind v4 / Tailwind CSS)
-
-- **Global Config**: `tailwind.config.js` (root)
-- **Brand Colors**: Neural Architect theme with primary, accent, and semantic colors
-- **Web**: Extends global config via `presets`
-- **Mobile**: Uses NativeWind v4 with same global config
+- Global config: `tailwind.config.js`
+- Web config: `apps/web/tailwind.config.js`
 
 ## Path Aliases
 
-All packages use `@/` alias for clean imports:
+All packages use `@/` aliases:
 
-- `apps/web`: `@/*` → `./src/*`
-- `apps/mobile`: `@/*` → `./src/*`
-- `packages/shared`: `@/*` → `./src/*`
-
-## TypeScript Configuration
-
-- **Strict Mode**: Enabled across all packages
-- **Base Config**: `tsconfig.json` (root)
-- **Package Configs**: Extend base with package-specific settings
+- `apps/web`: `@/*` -> `./src/*`
+- `packages/shared`: `@/*` -> `./src/*`
 
 ## Next Steps
 
-1. **Install dependencies**: Run `npm install` in the root
-2. **Build shared package**: Required before using in apps
-3. **Start development**: Use `npm run dev:web` or `npm run dev:mobile`
-4. **Implement UI**: Begin building components using the established stores and types
+1. Install dependencies with `npm install`
+2. Build shared package
+3. Start development with `npm run dev:web`
+4. Implement UI with shared stores and types
 
-## Notes
-
-- The shared package must be built before the apps can use it
-- Store factories require platform-specific storage adapters
-- All TypeScript configurations use strict mode
-- Tailwind config is centralized for consistent theming

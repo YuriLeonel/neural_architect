@@ -197,4 +197,3 @@ If localStorage is not working:
 
 - [Project Root README](../../README.md) - Overall project documentation
 - [Shared Package README](../../packages/shared/README.md) - Shared code reference
-- [Mobile App README](../mobile/README.md) - Mobile app documentation

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, PersistOptions } from 'zustand/middleware';
 import type { TimerState, TimerPhase, TimerConfig } from '../types';
+import { TIMER_PHASES, getPhaseDuration } from '../constants/timer';
 
 export interface TimerStore extends TimerState {
   start: () => void;
@@ -20,7 +21,7 @@ const defaultConfig: TimerConfig = {
   sessionsUntilLongBreak: 4,
 };
 
-// Storage implementation (localStorage vs MMKV) should be configured at the app level
+// Storage implementation should be configured at the app level
 export function createTimerStore(storage: PersistOptions<TimerStore>['storage']) {
   return create<TimerStore>()(
     persist(
@@ -29,7 +30,7 @@ export function createTimerStore(storage: PersistOptions<TimerStore>['storage'])
         totalDuration: defaultConfig.workDuration * 60,
         isRunning: false,
         isPaused: false,
-        phase: 'work',
+        phase: TIMER_PHASES.WORK,
         completedSessions: 0,
         startedAt: null,
         pausedAt: null,
@@ -70,9 +71,13 @@ export function createTimerStore(storage: PersistOptions<TimerStore>['storage'])
         },
 
         reset: () => {
+          const state = get();
+          const config = defaultConfig;
+          const duration = getPhaseDuration(state.phase, config);
+
           set({
-            timeRemaining: defaultConfig.workDuration * 60,
-            totalDuration: defaultConfig.workDuration * 60,
+            timeRemaining: duration,
+            totalDuration: duration,
             isRunning: false,
             isPaused: false,
             startedAt: null,
@@ -82,35 +87,23 @@ export function createTimerStore(storage: PersistOptions<TimerStore>['storage'])
 
         tick: () => {
           const state = get();
-          if (state.isRunning && state.timeRemaining > 0) {
-            const elapsed = state.startedAt
-              ? Math.floor((Date.now() - state.startedAt) / 1000)
-              : 0;
-            const newTimeRemaining = Math.max(0, state.totalDuration - elapsed);
+          if (!state.isRunning || !state.startedAt) {
+            return;
+          }
 
-            if (newTimeRemaining === 0) {
-              get().completeSession();
-            } else {
-              set({ timeRemaining: newTimeRemaining });
-            }
+          const elapsed = Math.floor((Date.now() - state.startedAt) / 1000);
+          const newTimeRemaining = Math.max(0, state.totalDuration - elapsed);
+
+          if (newTimeRemaining === 0) {
+            get().completeSession();
+          } else if (newTimeRemaining !== state.timeRemaining) {
+            set({ timeRemaining: newTimeRemaining });
           }
         },
 
         setPhase: (phase: TimerPhase) => {
           const config = defaultConfig;
-          let duration = 0;
-
-          switch (phase) {
-            case 'work':
-              duration = config.workDuration * 60;
-              break;
-            case 'shortBreak':
-              duration = config.shortBreakDuration * 60;
-              break;
-            case 'longBreak':
-              duration = config.longBreakDuration * 60;
-              break;
-          }
+          const duration = getPhaseDuration(phase, config);
 
           set({
             phase,
@@ -129,21 +122,32 @@ export function createTimerStore(storage: PersistOptions<TimerStore>['storage'])
 
         completeSession: () => {
           const state = get();
-          set({
-            isRunning: false,
-            isPaused: false,
-            timeRemaining: 0,
-            completedSessions: state.completedSessions + 1,
-            startedAt: null,
-            pausedAt: null,
-          });
+          const config = defaultConfig;
+          let nextPhase: TimerPhase;
+          let newCompletedSessions = state.completedSessions;
+
+          if (state.phase === TIMER_PHASES.WORK) {
+            newCompletedSessions = state.completedSessions + 1;
+            if (newCompletedSessions % config.sessionsUntilLongBreak === 0) {
+              nextPhase = TIMER_PHASES.LONG_BREAK;
+            } else {
+              nextPhase = TIMER_PHASES.SHORT_BREAK;
+            }
+          } else {
+            nextPhase = TIMER_PHASES.WORK;
+          }
+
+          get().setPhase(nextPhase);
+          
+          if (newCompletedSessions !== state.completedSessions) {
+            set({ completedSessions: newCompletedSessions });
+          }
         },
       }),
       {
         name: 'neural-architect-timer',
         storage,
         onRehydrateStorage: () => (state) => {
-          // Reset transient state on rehydration to prevent timers from auto-resuming
           if (state) {
             state.isRunning = false;
             state.isPaused = false;

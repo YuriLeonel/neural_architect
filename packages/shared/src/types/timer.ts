@@ -17,3 +17,14 @@ export interface TimerConfig {
   longBreakDuration: number;
   sessionsUntilLongBreak: number;
 }
+
+export interface TimerActions {
+  start: () => void;
+  pause: () => void;
+  resume: () => void;
+  reset: () => void;
+  tick: () => void;
+  setPhase: (phase: TimerPhase) => void;
+  setConfig: (config: Partial<TimerConfig>) => void;
+  completeSession: () => void;
+}

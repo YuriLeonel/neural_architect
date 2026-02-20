@@ -31,10 +31,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Expo
-.expo/
-.expo-shared/
-
 # Testing
 coverage/
 .nyc_output/

@@ -1,36 +1,16 @@
 # Neural Architect
 
-A gamified Pomodoro web application. Transform productivity sessions into a neural network that grows as you complete focused work.
+A simple but functional Pomodoro web application with gamified progression.
 
 ## Overview
 
-Neural Architect combines the Pomodoro Technique with progression mechanics. Each completed session grants experience, levels your network, and unlocks features over time.
-
-## Architecture
-
-This monorepo contains:
-
-- `apps/web`: React web application (Vite + TypeScript)
-- `packages/shared`: Shared TypeScript code, Zustand stores, types, and business logic
-
-### Monorepo Structure
-
-```text
-neural-architect/
-├── apps/
-│   └── web/
-├── packages/
-│   └── shared/
-├── package.json
-├── tailwind.config.js
-└── tsconfig.json
-```
+Neural Architect combines the Pomodoro Technique with progression mechanics. Each completed work session contributes to your growth metrics and persisted stats.
 
 ## Tech Stack
 
 - TypeScript (strict mode)
 - React + Vite
-- Zustand with persist middleware
+- Zustand with persistence
 - Tailwind CSS
 
 ## Evolution Formulas
@@ -51,22 +31,16 @@ neural-architect/
 npm install
 ```
 
-### Build shared package
-
-```bash
-npm run build --workspace=packages/shared
-```
-
 ### Development
 
 ```bash
-npm run dev:web
+npm run dev
 ```
 
 ### Build
 
 ```bash
-npm run build:web
+npm run build
 ```
 
 ### Type checking and linting
@@ -76,12 +50,23 @@ npm run type-check
 npm run lint
 ```
 
+## Project Structure
+
+```text
+neural-architect/
+├── src/
+│   ├── components/      # UI components
+│   ├── stores/          # Zustand stores and setup
+│   ├── types/           # TypeScript interfaces
+│   ├── constants/       # Timer and evolution constants/formulas
+│   └── utils/           # Shared utility helpers
+├── index.html
+├── package.json
+├── tsconfig.json
+├── tailwind.config.js
+└── vite.config.ts
+```
+
 ## State Management
 
-The app uses Zustand with `localStorage` persistence configured in `apps/web/src/stores/setup.ts`.
-
-## Documentation
-
-- [Web App Documentation](apps/web/README.md)
-- [Shared Package Documentation](packages/shared/README.md)
-
+The app uses Zustand with `localStorage` persistence configured in `src/stores/setup.ts`.

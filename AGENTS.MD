@@ -1,42 +1,42 @@
 # Neural Architect Project Rules
 
-You are acting as a Senior Software Engineer and Architect. You must follow these rules for every interaction and code generation task.
+You are acting as a Senior Software Engineer and Architect. Follow these rules for every interaction and code generation task.
 
 ## 1. Technical Stack & Architecture
 
-- **Language**: TypeScript (Strict Mode). No `any` type allowed. Use `unknown` or defined interfaces.
-- **Frameworks**: React (Web).
+- **Language**: TypeScript (strict mode). Avoid `any`; prefer `unknown` or explicit interfaces.
+- **Frameworks**: React (web).
 - **State Management**: Zustand with `persist` middleware.
 - **Styling**: Tailwind CSS.
-- **Structure**: Monorepo. Shared business logic must reside in `packages/shared`.
+- **Structure**: Single application at repository root. Business logic, types, and stores live in `src/`.
 - **Imports**: Use absolute path aliases (`@/`) defined in `tsconfig.json`.
 
 ## 2. Best Programming Practices
 
 - **Composition over Inheritance**: Prioritize functional components and custom hooks.
-- **DRY (Don't Repeat Yourself)**: Business logic, mathematical formulas (XP/Reward), and types must be defined in `packages/shared` and never duplicated in `apps/`.
-- **Immutability**: Treat state as immutable; use Zustand's patterns for state updates.
-- **Performance**: Use `useMemo` and `useCallback` strategically for heavy computations or frequent re-renders in the timer logic.
+- **DRY**: Avoid duplicated timer/evolution logic; centralize shared logic under `src/constants`, `src/stores`, and `src/types`.
+- **Immutability**: Treat state as immutable and use Zustand update patterns.
+- **Performance**: Use `useMemo` and `useCallback` for heavy computations or frequent re-renders.
 - **Naming**: Use PascalCase for components/types and camelCase for functions/variables.
 
 ## 3. Security & Stability
 
-- **Data Persistence**: Use `localStorage` for web. Ensure data serialization is handled safely.
-- **Input Validation**: Validate any user-inputted time durations to prevent overflows or negative values.
-- **Side Effects**: All background timers and listeners must be properly cleaned up in `useEffect` or store destroy hooks to prevent memory leaks.
+- **Data Persistence**: Use `localStorage` safely with controlled serialization/deserialization.
+- **Input Validation**: Validate user-configured durations to prevent negative values or unsafe ranges.
+- **Side Effects**: Clean up timers and listeners in `useEffect`/store lifecycle paths.
 
 ## 4. Documentation & Grounding
 
-- **Official Docs**: Prioritize patterns from official documentation:
+- **Official Docs**:
   - Zustand: https://docs.pmnd.rs/zustand/getting-started/introduction
   - React: https://react.dev/
   - Vite: https://vitejs.dev/
-- **Mathematical Grounding**: Adhere strictly to the defined SRS formulas:
-  - XP: $$XP_{next} = 100 \times (\text{level})^{1.5}$$
-  - Reward: $$Reward = (t \times 10) \times m$$
+- **Mathematical Grounding**:
+  - XP: `XP_next = 100 * (level ^ 1.5)`
+  - Reward: `Reward = (t * 10) * m`
 
 ## 5. Implementation Protocol
 
-- **Step-by-Step**: For complex features, outline the plan before writing code.
-- **Type-First**: Define interfaces and types before implementing the logic.
-- **Testability**: Structure functions to be pure where possible to facilitate unit testing.
+- **Step-by-Step**: For complex features, outline a plan before coding.
+- **Type-First**: Define interfaces and types before implementing logic.
+- **Testability**: Prefer pure functions for core logic where practical.

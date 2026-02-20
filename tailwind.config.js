@@ -1,10 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        // Neural Architect Brand Colors
         background: {
           DEFAULT: '#0a0a0f',
           secondary: '#141420',

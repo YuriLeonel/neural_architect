@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { persist, type PersistOptions } from 'zustand/middleware';
-import type { PomodoroConfig, TimerPhase, TimerState } from '../types';
+import type { PomodoroConfig, SessionRecord, TimerPhase, TimerState } from '../types';
 import { TIMER_PHASES } from '../constants/timer';
+import { calculateReward } from '../utils';
 
 export interface TimerStore extends TimerState {
   resetPending: boolean;
@@ -17,6 +18,10 @@ export interface TimerStore extends TimerState {
   confirmReset: () => void;
   cancelReset: () => void;
   completeSession: () => void;
+}
+
+export interface TimerStoreIntegrations {
+  onWorkSessionCompleted?: (record: SessionRecord) => void;
 }
 
 const DEFAULT_CONFIG: PomodoroConfig = {
@@ -41,7 +46,18 @@ function getPhaseDurationFromConfig(phase: TimerPhase, config: PomodoroConfig): 
   }
 }
 
-export function createTimerStore(storage: PersistOptions<TimerStore>['storage']) {
+function generateSessionId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  return `session-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+}
+
+export function createTimerStore(
+  storage: PersistOptions<TimerStore>['storage'],
+  integrations: TimerStoreIntegrations = {},
+) {
   return create<TimerStore>()(
     persist(
       (set, get): TimerStore => ({
@@ -177,8 +193,23 @@ export function createTimerStore(storage: PersistOptions<TimerStore>['storage'])
           const state = get();
           let nextPhase: TimerPhase;
           let newCompletedSessions = state.completedSessions;
+          const completedPhase = state.phase;
+          const completedDurationSeconds = getPhaseDurationFromConfig(completedPhase, state.config);
 
           if (state.phase === TIMER_PHASES.WORK) {
+            const xpEarned = Math.round(calculateReward(completedDurationSeconds / 60, 1));
+            const sessionRecord: SessionRecord = {
+              id: generateSessionId(),
+              category: state.config.currentCategory,
+              tagIds: state.config.activeTags,
+              phase: completedPhase,
+              durationSeconds: completedDurationSeconds,
+              completedAt: new Date().toISOString(),
+              xpEarned,
+            };
+
+            integrations.onWorkSessionCompleted?.(sessionRecord);
+
             newCompletedSessions = state.completedSessions + 1;
             if (newCompletedSessions % state.config.sessionsUntilLongBreak === 0) {
               nextPhase = TIMER_PHASES.LONG_BREAK;

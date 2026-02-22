@@ -1,3 +1,5 @@
+import type { TimerPhase } from './timer';
+
 export type SessionCategory = 'work' | 'study' | 'training' | 'custom';
 
 export interface SessionTag {
@@ -19,7 +21,7 @@ export interface SessionRecord {
   id: string;
   category: SessionCategory;
   tagIds: string[];
-  phase: 'work' | 'shortBreak' | 'longBreak';
+  phase: TimerPhase;
   durationSeconds: number;
   completedAt: string;
   xpEarned: number;

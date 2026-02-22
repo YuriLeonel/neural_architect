@@ -9,17 +9,10 @@ export interface TimerState {
   completedSessions: number;
   startedAt: number | null;
   pausedAt: number | null;
-  config?: PomodoroConfig;
+  config: PomodoroConfig;
 }
 
 export type TimerPhase = 'work' | 'shortBreak' | 'longBreak';
-
-export interface TimerConfig {
-  workDuration: number;
-  shortBreakDuration: number;
-  longBreakDuration: number;
-  sessionsUntilLongBreak: number;
-}
 
 export interface TimerActions {
   start: () => void;
@@ -29,5 +22,9 @@ export interface TimerActions {
   tick: () => void;
   setPhase: (phase: TimerPhase) => void;
   setConfig: (config: Partial<PomodoroConfig>) => void;
+  skipBreak: () => void;
+  requestReset: () => void;
+  confirmReset: () => void;
+  cancelReset: () => void;
   completeSession: () => void;
 }

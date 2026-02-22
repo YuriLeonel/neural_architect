@@ -1,3 +1,5 @@
+import type { PomodoroConfig } from './session';
+
 export interface TimerState {
   timeRemaining: number;
   totalDuration: number;
@@ -7,6 +9,7 @@ export interface TimerState {
   completedSessions: number;
   startedAt: number | null;
   pausedAt: number | null;
+  config?: PomodoroConfig;
 }
 
 export type TimerPhase = 'work' | 'shortBreak' | 'longBreak';
@@ -25,6 +28,6 @@ export interface TimerActions {
   reset: () => void;
   tick: () => void;
   setPhase: (phase: TimerPhase) => void;
-  setConfig: (config: Partial<TimerConfig>) => void;
+  setConfig: (config: Partial<PomodoroConfig>) => void;
   completeSession: () => void;
 }

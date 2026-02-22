@@ -2,7 +2,7 @@ const BASE_EXP_MULTIPLIER = 100;
 const EXP_CURVE_EXPONENT = 1.5;
 
 export function calculateExperienceToNextLevel(level: number): number {
-  return Math.floor(BASE_EXP_MULTIPLIER * Math.pow(level, EXP_CURVE_EXPONENT));
+  return Math.floor(BASE_EXP_MULTIPLIER * level ** EXP_CURVE_EXPONENT);
 }
 
 export function calculateTotalExperienceForLevel(targetLevel: number): number {
@@ -32,14 +32,14 @@ const BASE_NEURON_COUNT = 3;
 const NEURON_GROWTH_RATE = 1.15;
 
 export function calculateNeuronCount(level: number): number {
-  return Math.floor(BASE_NEURON_COUNT * Math.pow(NEURON_GROWTH_RATE, level - 1));
+  return Math.floor(BASE_NEURON_COUNT * NEURON_GROWTH_RATE ** (level - 1));
 }
 
 const CONNECTION_DENSITY = 1.5;
 
 export function calculateConnectionCount(level: number): number {
   const neuronCount = calculateNeuronCount(level);
-  return Math.floor(neuronCount * CONNECTION_DENSITY * Math.pow(level, 0.3));
+  return Math.floor(neuronCount * CONNECTION_DENSITY * level ** 0.3);
 }
 
 export const EXPERIENCE_REWARDS = {

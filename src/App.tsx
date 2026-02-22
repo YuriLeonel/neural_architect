@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
-import { useTimerStore } from '@/stores/setup';
+import { useSessionStore, useTimerStore } from '@/stores/setup';
+import { PhaseTabSelector } from '@/components/PhaseTabSelector';
 import { TimerDisplay } from '@/components/TimerDisplay';
 import { TimerControls } from '@/components/TimerControls';
+import { CategorySelector } from '@/components/CategorySelector';
+import { IntervalConfig } from '@/components/IntervalConfig';
 
 function App() {
   const tick = useTimerStore((state) => state.tick);
+  const completedSessions = useSessionStore((state) => state.sessionOrder.length);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -21,15 +25,17 @@ function App() {
   }, [tick]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-background text-foreground">
-      <h1 className="text-4xl font-bold text-center mb-8">Neural Architect</h1>
-      <p className="text-center text-muted-foreground mb-12">
-        Gamified Pomodoro Application
-      </p>
-      <div className="flex flex-col items-center justify-center space-y-8">
+    <div className="min-h-screen bg-background text-foreground">
+      <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center gap-8 px-4 py-10 sm:px-6">
+        <PhaseTabSelector />
         <TimerDisplay />
         <TimerControls />
-      </div>
+        <CategorySelector />
+        <IntervalConfig />
+        <p className="text-sm font-medium text-muted-foreground">
+          Completed sessions: {completedSessions}
+        </p>
+      </main>
     </div>
   );
 }

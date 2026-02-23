@@ -11,7 +11,7 @@ export interface TimerState {
   config: PomodoroConfig;
 }
 
-export type TimerPhase = 'work' | 'break';
+export type TimerPhase = 'focus' | 'break';
 
 export type TimerNotificationPayload =
   | { readonly type: 'FOCUS_COMPLETE' }

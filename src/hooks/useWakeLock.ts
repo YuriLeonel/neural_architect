@@ -16,8 +16,8 @@ export function useWakeLock(isActive: boolean): void {
 
     try {
       await currentWakeLock.release();
-    } catch {
-      // Release can fail if the lock is already gone; keep timer flow uninterrupted.
+    } catch (error) {
+      console.warn('Wake lock release failed:', error);
     } finally {
       if (wakeLockRef.current === currentWakeLock) {
         wakeLockRef.current = null;
@@ -48,8 +48,8 @@ export function useWakeLock(isActive: boolean): void {
       };
 
       nextWakeLock.addEventListener('release', handleWakeLockRelease);
-    } catch {
-      // Browsers may reject wake lock requests (battery saver, permission, policy).
+    } catch (error) {
+      console.warn('Wake lock request rejected:', error);
     }
   }, [isActive]);
 

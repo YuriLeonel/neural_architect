@@ -27,12 +27,12 @@ export interface TimerStore extends TimerState {
 }
 
 export interface TimerStoreIntegrations {
-  onWorkSessionCompleted?: (record: SessionRecord) => void;
+  onFocusSessionCompleted?: (record: SessionRecord) => void;
   onPhaseCompleted?: (completedPhase: TimerPhase) => void;
 }
 
 const DEFAULT_CONFIG: PomodoroConfig = {
-  workInterval: 1500,
+  focusInterval: 1500,
   breakInterval: 300,
   currentCategory: 'work',
   activeTags: [],
@@ -43,7 +43,7 @@ function normalizePhase(phase: unknown): TimerPhase {
     return TIMER_PHASES.BREAK;
   }
 
-  return TIMER_PHASES.WORK;
+  return TIMER_PHASES.FOCUS;
 }
 
 function isSessionCategory(value: unknown): value is SessionCategory {
@@ -58,7 +58,10 @@ function normalizeInterval(value: unknown, fallback: number): number {
 }
 
 function normalizeConfig(config: unknown): PomodoroConfig {
-  const candidate = typeof config === 'object' && config !== null ? (config as Partial<PomodoroConfig>) : {};
+  const candidate =
+    typeof config === 'object' && config !== null
+      ? (config as Partial<PomodoroConfig> & { workInterval?: unknown })
+      : {};
   const activeTags = Array.isArray(candidate.activeTags)
     ? candidate.activeTags.filter((tag): tag is string => typeof tag === 'string')
     : [];
@@ -67,7 +70,10 @@ function normalizeConfig(config: unknown): PomodoroConfig {
     : DEFAULT_CONFIG.currentCategory;
 
   return {
-    workInterval: normalizeInterval(candidate.workInterval, DEFAULT_CONFIG.workInterval),
+    focusInterval: normalizeInterval(
+      candidate.focusInterval ?? candidate.workInterval,
+      DEFAULT_CONFIG.focusInterval,
+    ),
     breakInterval: normalizeInterval(candidate.breakInterval, DEFAULT_CONFIG.breakInterval),
     currentCategory,
     activeTags,
@@ -82,11 +88,11 @@ export function createTimerStore(
     persist(
       (set, get): TimerStore => ({
         config: DEFAULT_CONFIG,
-        timeRemaining: DEFAULT_CONFIG.workInterval,
-        totalDuration: DEFAULT_CONFIG.workInterval,
+        timeRemaining: DEFAULT_CONFIG.focusInterval,
+        totalDuration: DEFAULT_CONFIG.focusInterval,
         isRunning: false,
         isPaused: false,
-        phase: TIMER_PHASES.WORK,
+        phase: TIMER_PHASES.FOCUS,
         resetPending: false,
         startedAt: null,
         pausedAt: null,
@@ -172,7 +178,7 @@ export function createTimerStore(
         },
         skipBreak: () => {
           const state = get();
-          if (state.phase !== TIMER_PHASES.WORK) {
+          if (state.phase !== TIMER_PHASES.FOCUS) {
             get().completeSession();
           }
         },
@@ -200,7 +206,7 @@ export function createTimerStore(
           const completedPhase = state.phase;
           const completedDurationSeconds = getPhaseDuration(completedPhase, state.config);
 
-          if (state.phase === TIMER_PHASES.WORK) {
+          if (state.phase === TIMER_PHASES.FOCUS) {
             const xpEarned = Math.round(calculateReward(completedDurationSeconds / 60, 1));
             const sessionRecord: SessionRecord = {
               id: createId('session'),
@@ -212,13 +218,13 @@ export function createTimerStore(
               xpEarned,
             };
 
-            integrations.onWorkSessionCompleted?.(sessionRecord);
+            integrations.onFocusSessionCompleted?.(sessionRecord);
           }
 
           integrations.onPhaseCompleted?.(completedPhase);
 
           const nextPhase: TimerPhase =
-            state.phase === TIMER_PHASES.WORK ? TIMER_PHASES.BREAK : TIMER_PHASES.WORK;
+            state.phase === TIMER_PHASES.FOCUS ? TIMER_PHASES.BREAK : TIMER_PHASES.FOCUS;
           get().setPhase(nextPhase);
         },
       }),

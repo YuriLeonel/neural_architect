@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useTimerStore } from '@/stores/setup';
 
-const WORK_MIN_MINUTES = 5;
-const WORK_MAX_MINUTES = 60;
+const FOCUS_MIN_MINUTES = 5;
+const FOCUS_MAX_MINUTES = 60;
 const BREAK_MIN_MINUTES = 5;
 const BREAK_MAX_MINUTES = 30;
 const STEP_INTERVAL_MINUTES = 5;
@@ -68,15 +68,15 @@ export function IntervalConfig() {
   const config = useTimerStore((state) => state.config);
   const setConfig = useTimerStore((state) => state.setConfig);
 
-  const workMinutes = useMemo(
+  const focusMinutes = useMemo(
     () =>
       normalizeToStep(
-        config.workInterval / 60,
-        WORK_MIN_MINUTES,
-        WORK_MAX_MINUTES,
+        config.focusInterval / 60,
+        FOCUS_MIN_MINUTES,
+        FOCUS_MAX_MINUTES,
         STEP_INTERVAL_MINUTES,
       ),
-    [config.workInterval],
+    [config.focusInterval],
   );
 
   const breakMinutes = useMemo(
@@ -93,19 +93,19 @@ export function IntervalConfig() {
   return (
     <section className="w-full max-w-md space-y-3" aria-label="Interval configuration">
       <IntervalStepper
-        label="Work Interval"
-        value={workMinutes}
-        min={WORK_MIN_MINUTES}
-        max={WORK_MAX_MINUTES}
+        label="Focus Interval"
+        value={focusMinutes}
+        min={FOCUS_MIN_MINUTES}
+        max={FOCUS_MAX_MINUTES}
         step={STEP_INTERVAL_MINUTES}
         onChange={(nextValue) => {
           const normalized = normalizeToStep(
             nextValue,
-            WORK_MIN_MINUTES,
-            WORK_MAX_MINUTES,
+            FOCUS_MIN_MINUTES,
+            FOCUS_MAX_MINUTES,
             STEP_INTERVAL_MINUTES,
           );
-          setConfig({ workInterval: toSeconds(normalized) });
+          setConfig({ focusInterval: toSeconds(normalized) });
         }}
       />
       <IntervalStepper

@@ -11,7 +11,7 @@ export interface SessionTag {
 }
 
 export interface PomodoroConfig {
-  workInterval: number;
+  focusInterval: number;
   breakInterval: number;
   currentCategory: SessionCategory;
   activeTags: string[];

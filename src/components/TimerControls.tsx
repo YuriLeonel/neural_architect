@@ -39,7 +39,7 @@ export function TimerControls() {
         >
           {isRunning ? 'Pause' : isPaused ? 'Resume' : 'Start'}
         </button>
-        {phase !== TIMER_PHASES.WORK && (
+        {phase !== TIMER_PHASES.FOCUS && (
           <button
             type="button"
             onClick={skipBreak}

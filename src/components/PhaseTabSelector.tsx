@@ -8,7 +8,7 @@ interface PhaseTab {
 }
 
 const PHASE_TABS: PhaseTab[] = [
-  { label: 'Focus', value: TIMER_PHASES.WORK },
+  { label: 'Focus', value: TIMER_PHASES.FOCUS },
   { label: 'Break', value: TIMER_PHASES.BREAK },
 ];
 

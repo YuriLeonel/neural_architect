@@ -17,7 +17,8 @@ function createJsonStorageAdapter() {
 
       try {
         return JSON.parse(value);
-      } catch {
+      } catch (error) {
+        console.warn('Failed to parse stored value for key:', name, error);
         localStorage.removeItem(name);
         return null;
       }
@@ -40,13 +41,13 @@ export const useUserStatsStore = createUserStatsStore(storage);
 export const useSessionStore = createSessionStore(storage);
 
 export const useTimerStore = createTimerStore(storage, {
-  onWorkSessionCompleted: (record) => {
+  onFocusSessionCompleted: (record) => {
     useSessionStore.getState().recordSession(record);
     useEvolutionStore.getState().addExperience(record.xpEarned);
   },
   onPhaseCompleted: (completedPhase) => {
     const payload: TimerNotificationPayload =
-      completedPhase === 'work'
+      completedPhase === 'focus'
         ? { type: 'FOCUS_COMPLETE' }
         : { type: 'BREAK_COMPLETE' };
 

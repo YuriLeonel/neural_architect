@@ -35,7 +35,8 @@ export async function requestPermission(): Promise<NotificationPermission> {
 
   try {
     return await Notification.requestPermission();
-  } catch {
+  } catch (error) {
+    console.warn('Notification permission request failed:', error);
     return 'denied';
   }
 }
@@ -53,7 +54,7 @@ export function sendTimerNotification(payload: TimerNotificationPayload): void {
 
   try {
     new Notification(content.title, { body: content.body });
-  } catch {
-    // Ignore notification delivery failures so timer flow never breaks.
+  } catch (error) {
+    console.warn('Notification delivery failed:', error);
   }
 }

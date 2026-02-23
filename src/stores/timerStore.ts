@@ -28,6 +28,7 @@ export interface TimerStore extends TimerState {
 
 export interface TimerStoreIntegrations {
   onWorkSessionCompleted?: (record: SessionRecord) => void;
+  onPhaseCompleted?: (completedPhase: TimerPhase) => void;
 }
 
 const DEFAULT_CONFIG: PomodoroConfig = {
@@ -213,6 +214,8 @@ export function createTimerStore(
 
             integrations.onWorkSessionCompleted?.(sessionRecord);
           }
+
+          integrations.onPhaseCompleted?.(completedPhase);
 
           const nextPhase: TimerPhase =
             state.phase === TIMER_PHASES.WORK ? TIMER_PHASES.BREAK : TIMER_PHASES.WORK;

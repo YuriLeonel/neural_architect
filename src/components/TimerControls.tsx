@@ -1,8 +1,11 @@
+import { useRef } from 'react';
 import { TIMER_PHASES } from '@/constants/timer';
 import { useTimerStore } from '@/stores/setup';
 import { ResetConfirmDialog } from '@/components/ResetConfirmDialog';
+import { requestPermission } from '@/utils/notificationService';
 
 export function TimerControls() {
+  const permissionRequested = useRef(false);
   const isRunning = useTimerStore((state) => state.isRunning);
   const isPaused = useTimerStore((state) => state.isPaused);
   const phase = useTimerStore((state) => state.phase);
@@ -18,6 +21,10 @@ export function TimerControls() {
     } else if (isPaused) {
       resume();
     } else {
+      if (!permissionRequested.current) {
+        permissionRequested.current = true;
+        void requestPermission();
+      }
       start();
     }
   };

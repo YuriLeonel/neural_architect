@@ -4,6 +4,8 @@ import {
   createTimerStore,
   createUserStatsStore,
 } from '@/stores';
+import type { TimerNotificationPayload } from '@/types';
+import { sendTimerNotification } from '@/utils/notificationService';
 
 function createJsonStorageAdapter() {
   return {
@@ -41,5 +43,13 @@ export const useTimerStore = createTimerStore(storage, {
   onWorkSessionCompleted: (record) => {
     useSessionStore.getState().recordSession(record);
     useEvolutionStore.getState().addExperience(record.xpEarned);
+  },
+  onPhaseCompleted: (completedPhase) => {
+    const payload: TimerNotificationPayload =
+      completedPhase === 'work'
+        ? { type: 'FOCUS_COMPLETE' }
+        : { type: 'BREAK_COMPLETE' };
+
+    sendTimerNotification(payload);
   },
 });

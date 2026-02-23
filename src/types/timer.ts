@@ -13,6 +13,10 @@ export interface TimerState {
 
 export type TimerPhase = 'work' | 'break';
 
+export type TimerNotificationPayload =
+  | { readonly type: 'FOCUS_COMPLETE' }
+  | { readonly type: 'BREAK_COMPLETE' };
+
 export interface TimerActions {
   start: () => void;
   pause: () => void;

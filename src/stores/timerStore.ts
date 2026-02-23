@@ -8,15 +8,14 @@ import {
   type TimerPhase,
   type TimerState,
 } from '../types';
-import { TIMER_PHASES } from '../constants/timer';
-import { calculateReward } from '../utils';
+import { TIMER_PHASES, getPhaseDuration } from '../constants/timer';
+import { calculateReward, createId } from '../utils';
 
 export interface TimerStore extends TimerState {
   resetPending: boolean;
   start: () => void;
   pause: () => void;
   resume: () => void;
-  reset: () => void;
   tick: () => void;
   setPhase: (phase: TimerPhase) => void;
   setConfig: (config: Partial<PomodoroConfig>) => void;
@@ -74,25 +73,6 @@ function normalizeConfig(config: unknown): PomodoroConfig {
   };
 }
 
-function getPhaseDurationFromConfig(phase: TimerPhase, config: PomodoroConfig): number {
-  switch (phase) {
-    case TIMER_PHASES.WORK:
-      return config.workInterval;
-    case TIMER_PHASES.BREAK:
-      return config.breakInterval;
-    default:
-      return config.workInterval;
-  }
-}
-
-function generateSessionId(): string {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
-  }
-
-  return `session-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
-}
-
 export function createTimerStore(
   storage: PersistOptions<TimerStore>['storage'],
   integrations: TimerStoreIntegrations = {},
@@ -106,7 +86,6 @@ export function createTimerStore(
         isRunning: false,
         isPaused: false,
         phase: TIMER_PHASES.WORK,
-        completedSessions: 0,
         resetPending: false,
         startedAt: null,
         pausedAt: null,
@@ -143,19 +122,6 @@ export function createTimerStore(
             });
           }
         },
-        reset: () => {
-          const state = get();
-          const duration = getPhaseDurationFromConfig(state.phase, state.config);
-          set({
-            timeRemaining: duration,
-            totalDuration: duration,
-            isRunning: false,
-            isPaused: false,
-            resetPending: false,
-            startedAt: null,
-            pausedAt: null,
-          });
-        },
         tick: () => {
           const state = get();
           if (!state.isRunning || !state.startedAt) {
@@ -172,7 +138,7 @@ export function createTimerStore(
           }
         },
         setPhase: (phase: TimerPhase) => {
-          const duration = getPhaseDurationFromConfig(phase, get().config);
+          const duration = getPhaseDuration(phase, get().config);
           set({
             phase,
             timeRemaining: duration,
@@ -190,7 +156,7 @@ export function createTimerStore(
               ...state.config,
               ...newConfig,
             });
-            const duration = getPhaseDurationFromConfig(state.phase, mergedConfig);
+            const duration = getPhaseDuration(state.phase, mergedConfig);
 
             return {
               config: mergedConfig,
@@ -214,7 +180,7 @@ export function createTimerStore(
         },
         confirmReset: () => {
           const state = get();
-          const duration = getPhaseDurationFromConfig(state.phase, state.config);
+          const duration = getPhaseDuration(state.phase, state.config);
           set({
             timeRemaining: duration,
             totalDuration: duration,
@@ -230,15 +196,13 @@ export function createTimerStore(
         },
         completeSession: () => {
           const state = get();
-          let nextPhase: TimerPhase;
-          let newCompletedSessions = state.completedSessions;
           const completedPhase = state.phase;
-          const completedDurationSeconds = getPhaseDurationFromConfig(completedPhase, state.config);
+          const completedDurationSeconds = getPhaseDuration(completedPhase, state.config);
 
           if (state.phase === TIMER_PHASES.WORK) {
             const xpEarned = Math.round(calculateReward(completedDurationSeconds / 60, 1));
             const sessionRecord: SessionRecord = {
-              id: generateSessionId(),
+              id: createId('session'),
               category: state.config.currentCategory,
               tagIds: state.config.activeTags,
               phase: completedPhase,
@@ -248,18 +212,11 @@ export function createTimerStore(
             };
 
             integrations.onWorkSessionCompleted?.(sessionRecord);
-
-            newCompletedSessions = state.completedSessions + 1;
-            nextPhase = TIMER_PHASES.BREAK;
-          } else {
-            nextPhase = TIMER_PHASES.WORK;
           }
 
+          const nextPhase: TimerPhase =
+            state.phase === TIMER_PHASES.WORK ? TIMER_PHASES.BREAK : TIMER_PHASES.WORK;
           get().setPhase(nextPhase);
-
-          if (newCompletedSessions !== state.completedSessions) {
-            set({ completedSessions: newCompletedSessions });
-          }
         },
       }),
       {
@@ -275,7 +232,7 @@ export function createTimerStore(
             state.phase = normalizePhase(state.phase);
             state.config = normalizeConfig(state.config);
 
-            const duration = getPhaseDurationFromConfig(state.phase, state.config);
+            const duration = getPhaseDuration(state.phase, state.config);
             state.timeRemaining = duration;
             state.totalDuration = duration;
           }

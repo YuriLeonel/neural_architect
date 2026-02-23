@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useSessionStore, useTimerStore } from '@/stores/setup';
 import type { SessionCategory } from '@/types';
+import { createId } from '@/utils';
 
 interface CategoryOption {
   label: string;
@@ -15,14 +16,6 @@ const CATEGORY_OPTIONS: CategoryOption[] = [
 ];
 
 const MAX_TAG_LENGTH = 40;
-
-function createTagId() {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
-  }
-
-  return `tag-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-}
 
 export function CategorySelector() {
   const config = useTimerStore((state) => state.config);
@@ -46,7 +39,7 @@ export function CategorySelector() {
       return;
     }
 
-    const tagId = createTagId();
+    const tagId = createId('tag');
 
     addTag({
       id: tagId,

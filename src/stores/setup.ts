@@ -5,50 +5,20 @@ import {
   createUserStatsStore,
 } from '@/stores';
 
-export const useEvolutionStore = createEvolutionStore({
-  getItem: (name: string) => {
-    const value = localStorage.getItem(name);
-    return value ? JSON.parse(value) : null;
-  },
-  setItem: (name: string, value: unknown) => {
-    localStorage.setItem(name, JSON.stringify(value));
-  },
-  removeItem: (name: string) => {
-    localStorage.removeItem(name);
-  },
-});
-
-export const useUserStatsStore = createUserStatsStore({
-  getItem: (name: string) => {
-    const value = localStorage.getItem(name);
-    return value ? JSON.parse(value) : null;
-  },
-  setItem: (name: string, value: unknown) => {
-    localStorage.setItem(name, JSON.stringify(value));
-  },
-  removeItem: (name: string) => {
-    localStorage.removeItem(name);
-  },
-});
-
-export const useSessionStore = createSessionStore({
-  getItem: (name: string) => {
-    const value = localStorage.getItem(name);
-    return value ? JSON.parse(value) : null;
-  },
-  setItem: (name: string, value: unknown) => {
-    localStorage.setItem(name, JSON.stringify(value));
-  },
-  removeItem: (name: string) => {
-    localStorage.removeItem(name);
-  },
-});
-
-export const useTimerStore = createTimerStore(
-  {
+function createJsonStorageAdapter() {
+  return {
     getItem: (name: string) => {
       const value = localStorage.getItem(name);
-      return value ? JSON.parse(value) : null;
+      if (!value) {
+        return null;
+      }
+
+      try {
+        return JSON.parse(value);
+      } catch {
+        localStorage.removeItem(name);
+        return null;
+      }
     },
     setItem: (name: string, value: unknown) => {
       localStorage.setItem(name, JSON.stringify(value));
@@ -56,11 +26,20 @@ export const useTimerStore = createTimerStore(
     removeItem: (name: string) => {
       localStorage.removeItem(name);
     },
+  };
+}
+
+const storage = createJsonStorageAdapter();
+
+export const useEvolutionStore = createEvolutionStore(storage);
+
+export const useUserStatsStore = createUserStatsStore(storage);
+
+export const useSessionStore = createSessionStore(storage);
+
+export const useTimerStore = createTimerStore(storage, {
+  onWorkSessionCompleted: (record) => {
+    useSessionStore.getState().recordSession(record);
+    useEvolutionStore.getState().addExperience(record.xpEarned);
   },
-  {
-    onWorkSessionCompleted: (record) => {
-      useSessionStore.getState().recordSession(record);
-      useEvolutionStore.getState().addExperience(record.xpEarned);
-    },
-  },
-);
+});

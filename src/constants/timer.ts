@@ -1,3 +1,4 @@
+import type { PomodoroConfig } from '../types/session';
 import type { TimerPhase } from '../types/timer';
 
 export const TIMER_PHASES = {
@@ -5,18 +6,13 @@ export const TIMER_PHASES = {
   BREAK: 'break' as const,
 } as const;
 
-export type TimerPhaseValue = typeof TIMER_PHASES[keyof typeof TIMER_PHASES];
-
-export function getPhaseDuration(
-  phase: TimerPhase,
-  config: { workDuration: number; breakDuration: number },
-): number {
+export function getPhaseDuration(phase: TimerPhase, config: PomodoroConfig): number {
   switch (phase) {
     case TIMER_PHASES.WORK:
-      return config.workDuration * 60;
+      return config.workInterval;
     case TIMER_PHASES.BREAK:
-      return config.breakDuration * 60;
+      return config.breakInterval;
     default:
-      return config.workDuration * 60;
+      return config.workInterval;
   }
 }

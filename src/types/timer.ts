@@ -6,7 +6,6 @@ export interface TimerState {
   isRunning: boolean;
   isPaused: boolean;
   phase: TimerPhase;
-  completedSessions: number;
   startedAt: number | null;
   pausedAt: number | null;
   config: PomodoroConfig;
@@ -18,7 +17,6 @@ export interface TimerActions {
   start: () => void;
   pause: () => void;
   resume: () => void;
-  reset: () => void;
   tick: () => void;
   setPhase: (phase: TimerPhase) => void;
   setConfig: (config: Partial<PomodoroConfig>) => void;

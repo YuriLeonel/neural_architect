@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 import { persist, type PersistOptions } from 'zustand/middleware';
-import type { PomodoroConfig, SessionRecord, TimerPhase, TimerState } from '../types';
+import {
+  SESSION_CATEGORIES,
+  type PomodoroConfig,
+  type SessionCategory,
+  type SessionRecord,
+  type TimerPhase,
+  type TimerState,
+} from '../types';
 import { TIMER_PHASES } from '../constants/timer';
 import { calculateReward } from '../utils';
 
@@ -27,20 +34,52 @@ export interface TimerStoreIntegrations {
 const DEFAULT_CONFIG: PomodoroConfig = {
   workInterval: 1500,
   breakInterval: 300,
-  longBreakInterval: 900,
-  sessionsUntilLongBreak: 4,
   currentCategory: 'work',
   activeTags: [],
 };
+
+function normalizePhase(phase: unknown): TimerPhase {
+  if (phase === TIMER_PHASES.BREAK || phase === 'shortBreak' || phase === 'longBreak') {
+    return TIMER_PHASES.BREAK;
+  }
+
+  return TIMER_PHASES.WORK;
+}
+
+function isSessionCategory(value: unknown): value is SessionCategory {
+  return (
+    typeof value === 'string' &&
+    (SESSION_CATEGORIES as readonly string[]).includes(value)
+  );
+}
+
+function normalizeInterval(value: unknown, fallback: number): number {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : fallback;
+}
+
+function normalizeConfig(config: unknown): PomodoroConfig {
+  const candidate = typeof config === 'object' && config !== null ? (config as Partial<PomodoroConfig>) : {};
+  const activeTags = Array.isArray(candidate.activeTags)
+    ? candidate.activeTags.filter((tag): tag is string => typeof tag === 'string')
+    : [];
+  const currentCategory = isSessionCategory(candidate.currentCategory)
+    ? candidate.currentCategory
+    : DEFAULT_CONFIG.currentCategory;
+
+  return {
+    workInterval: normalizeInterval(candidate.workInterval, DEFAULT_CONFIG.workInterval),
+    breakInterval: normalizeInterval(candidate.breakInterval, DEFAULT_CONFIG.breakInterval),
+    currentCategory,
+    activeTags,
+  };
+}
 
 function getPhaseDurationFromConfig(phase: TimerPhase, config: PomodoroConfig): number {
   switch (phase) {
     case TIMER_PHASES.WORK:
       return config.workInterval;
-    case TIMER_PHASES.SHORT_BREAK:
+    case TIMER_PHASES.BREAK:
       return config.breakInterval;
-    case TIMER_PHASES.LONG_BREAK:
-      return config.longBreakInterval;
     default:
       return config.workInterval;
   }
@@ -147,10 +186,10 @@ export function createTimerStore(
         },
         setConfig: (newConfig: Partial<PomodoroConfig>) => {
           set((state) => {
-            const mergedConfig: PomodoroConfig = {
+            const mergedConfig = normalizeConfig({
               ...state.config,
               ...newConfig,
-            };
+            });
             const duration = getPhaseDurationFromConfig(state.phase, mergedConfig);
 
             return {
@@ -211,11 +250,7 @@ export function createTimerStore(
             integrations.onWorkSessionCompleted?.(sessionRecord);
 
             newCompletedSessions = state.completedSessions + 1;
-            if (newCompletedSessions % state.config.sessionsUntilLongBreak === 0) {
-              nextPhase = TIMER_PHASES.LONG_BREAK;
-            } else {
-              nextPhase = TIMER_PHASES.SHORT_BREAK;
-            }
+            nextPhase = TIMER_PHASES.BREAK;
           } else {
             nextPhase = TIMER_PHASES.WORK;
           }
@@ -237,18 +272,12 @@ export function createTimerStore(
             state.resetPending = false;
             state.startedAt = null;
             state.pausedAt = null;
+            state.phase = normalizePhase(state.phase);
+            state.config = normalizeConfig(state.config);
 
-            const persistedConfig = state.config;
-            state.config = {
-              ...DEFAULT_CONFIG,
-              ...persistedConfig,
-            };
-
-            if (!persistedConfig) {
-              const duration = getPhaseDurationFromConfig(state.phase, state.config);
-              state.timeRemaining = duration;
-              state.totalDuration = duration;
-            }
+            const duration = getPhaseDurationFromConfig(state.phase, state.config);
+            state.timeRemaining = duration;
+            state.totalDuration = duration;
           }
         },
       },

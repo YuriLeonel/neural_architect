@@ -3,11 +3,13 @@ import { useTimerStore } from '@/stores/setup';
 
 const WORK_MIN_MINUTES = 5;
 const WORK_MAX_MINUTES = 60;
-const WORK_STEP_MINUTES = 5;
-
-const BREAK_MIN_MINUTES = 1;
+const BREAK_MIN_MINUTES = 5;
 const BREAK_MAX_MINUTES = 30;
-const BREAK_STEP_MINUTES = 1;
+const STEP_INTERVAL_MINUTES = 5;
+
+function toSeconds(minutes: number): number {
+  return Math.round(minutes * 60);
+}
 
 function normalizeToStep(value: number, min: number, max: number, step: number): number {
   if (!Number.isFinite(value)) {
@@ -72,7 +74,7 @@ export function IntervalConfig() {
         config.workInterval / 60,
         WORK_MIN_MINUTES,
         WORK_MAX_MINUTES,
-        WORK_STEP_MINUTES,
+        STEP_INTERVAL_MINUTES,
       ),
     [config.workInterval],
   );
@@ -83,7 +85,7 @@ export function IntervalConfig() {
         config.breakInterval / 60,
         BREAK_MIN_MINUTES,
         BREAK_MAX_MINUTES,
-        BREAK_STEP_MINUTES,
+        STEP_INTERVAL_MINUTES,
       ),
     [config.breakInterval],
   );
@@ -95,15 +97,15 @@ export function IntervalConfig() {
         value={workMinutes}
         min={WORK_MIN_MINUTES}
         max={WORK_MAX_MINUTES}
-        step={WORK_STEP_MINUTES}
+        step={STEP_INTERVAL_MINUTES}
         onChange={(nextValue) => {
           const normalized = normalizeToStep(
             nextValue,
             WORK_MIN_MINUTES,
             WORK_MAX_MINUTES,
-            WORK_STEP_MINUTES,
+            STEP_INTERVAL_MINUTES,
           );
-          setConfig({ workInterval: normalized * 60 });
+          setConfig({ workInterval: toSeconds(normalized) });
         }}
       />
       <IntervalStepper
@@ -111,15 +113,15 @@ export function IntervalConfig() {
         value={breakMinutes}
         min={BREAK_MIN_MINUTES}
         max={BREAK_MAX_MINUTES}
-        step={BREAK_STEP_MINUTES}
+        step={STEP_INTERVAL_MINUTES}
         onChange={(nextValue) => {
           const normalized = normalizeToStep(
             nextValue,
             BREAK_MIN_MINUTES,
             BREAK_MAX_MINUTES,
-            BREAK_STEP_MINUTES,
+            STEP_INTERVAL_MINUTES,
           );
-          setConfig({ breakInterval: normalized * 60 });
+          setConfig({ breakInterval: toSeconds(normalized) });
         }}
       />
     </section>

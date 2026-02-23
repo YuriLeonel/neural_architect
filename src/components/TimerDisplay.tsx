@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useTimerStore } from '@/stores/setup';
-import { TIMER_PHASES } from '@/constants';
 import { formatTime } from '@/utils';
 
 const RING_RADIUS = 140;
@@ -10,7 +9,6 @@ const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 export function TimerDisplay() {
   const timeRemaining = useTimerStore((state) => state.timeRemaining);
   const totalDuration = useTimerStore((state) => state.totalDuration);
-  const phase = useTimerStore((state) => state.phase);
   const isRunning = useTimerStore((state) => state.isRunning);
   const tick = useTimerStore((state) => state.tick);
 
@@ -28,12 +26,6 @@ export function TimerDisplay() {
     };
   }, [isRunning, tick]);
 
-  const phaseLabels: Record<string, string> = {
-    [TIMER_PHASES.WORK]: 'Work',
-    [TIMER_PHASES.SHORT_BREAK]: 'Short Break',
-    [TIMER_PHASES.LONG_BREAK]: 'Long Break',
-  };
-
   const boundedRemaining = Math.max(0, timeRemaining);
   const normalizedTotal = totalDuration > 0 ? totalDuration : 1;
   const progress = Math.min(1, boundedRemaining / normalizedTotal);
@@ -41,10 +33,7 @@ export function TimerDisplay() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-6">
-      <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-sm">
-        {phaseLabels[phase] ?? phase}
-      </div>
-      <div className="relative h-80 w-80 sm:h-96 sm:w-96">
+      <div className="relative h-96 w-96 sm:h-[28rem] sm:w-[28rem]">
         <svg
           className="h-full w-full -rotate-90"
           viewBox="0 0 320 320"
@@ -73,8 +62,8 @@ export function TimerDisplay() {
             className="text-primary transition-all duration-500 ease-linear"
           />
         </svg>
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <span className="font-mono text-7xl font-bold tracking-tight text-foreground sm:text-8xl md:text-9xl">
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-6">
+          <span className="font-mono text-6xl font-bold tracking-tight text-foreground sm:text-7xl md:text-8xl">
             {formatTime(timeRemaining)}
           </span>
         </div>

@@ -12,7 +12,7 @@ export interface TimerState {
   config: PomodoroConfig;
 }
 
-export type TimerPhase = 'work' | 'shortBreak' | 'longBreak';
+export type TimerPhase = 'work' | 'break';
 
 export interface TimerActions {
   start: () => void;

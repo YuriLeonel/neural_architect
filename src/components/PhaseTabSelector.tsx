@@ -8,9 +8,8 @@ interface PhaseTab {
 }
 
 const PHASE_TABS: PhaseTab[] = [
-  { label: 'Work', value: TIMER_PHASES.WORK },
-  { label: 'Short Break', value: TIMER_PHASES.SHORT_BREAK },
-  { label: 'Long Break', value: TIMER_PHASES.LONG_BREAK },
+  { label: 'Focus', value: TIMER_PHASES.WORK },
+  { label: 'Break', value: TIMER_PHASES.BREAK },
 ];
 
 export function PhaseTabSelector() {

@@ -1,6 +1,8 @@
 import type { TimerPhase } from './timer';
 
-export type SessionCategory = 'work' | 'study' | 'training' | 'custom';
+export const SESSION_CATEGORIES = ['work', 'study', 'training', 'custom'] as const;
+
+export type SessionCategory = (typeof SESSION_CATEGORIES)[number];
 
 export interface SessionTag {
   id: string;
@@ -11,8 +13,6 @@ export interface SessionTag {
 export interface PomodoroConfig {
   workInterval: number;
   breakInterval: number;
-  longBreakInterval: number;
-  sessionsUntilLongBreak: number;
   currentCategory: SessionCategory;
   activeTags: string[];
 }

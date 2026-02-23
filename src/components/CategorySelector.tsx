@@ -29,6 +29,7 @@ export function CategorySelector() {
   const setConfig = useTimerStore((state) => state.setConfig);
   const tags = useSessionStore((state) => state.tags);
   const addTag = useSessionStore((state) => state.addTag);
+  const removeTag = useSessionStore((state) => state.removeTag);
 
   const [isCreatingTag, setIsCreatingTag] = useState(false);
   const [newTagLabel, setNewTagLabel] = useState('');
@@ -74,6 +75,14 @@ export function CategorySelector() {
     setConfig({
       currentCategory: 'custom',
       activeTags,
+    });
+  };
+
+  const removeCustomTag = (tagId: string) => {
+    removeTag(tagId);
+    setConfig({
+      currentCategory: 'custom',
+      activeTags: config.activeTags.filter((activeTagId) => activeTagId !== tagId),
     });
   };
 
@@ -139,18 +148,37 @@ export function CategorySelector() {
           {customTags.map((tag) => {
             const isTagActive = config.activeTags.includes(tag.id);
             return (
-              <button
+              <div
                 key={tag.id}
-                type="button"
-                onClick={() => toggleCustomTag(tag.id)}
-                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                className={`flex items-center rounded-full border transition-colors ${
                   isTagActive
                     ? 'border-primary bg-primary text-primary-foreground'
                     : 'border-border bg-background text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {tag.label}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => toggleCustomTag(tag.id)}
+                  className="rounded-l-full px-3 py-1 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                  {tag.label}
+                </button>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeCustomTag(tag.id);
+                  }}
+                  aria-label={`Remove ${tag.label} tag`}
+                  className={`rounded-r-full px-2 py-1 text-sm font-semibold leading-none transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                    isTagActive
+                      ? 'text-primary-foreground/80 hover:text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  ×
+                </button>
+              </div>
             );
           })}
         </div>

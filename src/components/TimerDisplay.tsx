@@ -57,7 +57,7 @@ export function TimerDisplay() {
             stroke="currentColor"
             strokeWidth={RING_STROKE_WIDTH}
             strokeDasharray={RING_CIRCUMFERENCE}
-            strokeDashoffset={ringOffset}
+            strokeDashoffset={-ringOffset}
             strokeLinecap="round"
             className="text-primary transition-all duration-500 ease-linear"
           />

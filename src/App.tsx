@@ -5,10 +5,14 @@ import { TimerDisplay } from '@/components/TimerDisplay';
 import { TimerControls } from '@/components/TimerControls';
 import { CategorySelector } from '@/components/CategorySelector';
 import { IntervalConfig } from '@/components/IntervalConfig';
+import { useWakeLock } from '@/hooks/useWakeLock';
 
 function App() {
   const tick = useTimerStore((state) => state.tick);
+  const isRunning = useTimerStore((state) => state.isRunning);
   const completedSessions = useSessionStore((state) => state.sessionOrder.length);
+
+  useWakeLock(isRunning);
 
   useEffect(() => {
     const handleVisibilityChange = () => {

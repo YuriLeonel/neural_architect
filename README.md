@@ -6,6 +6,10 @@ A simple but functional Pomodoro web application with gamified progression.
 
 Neural Architect combines the Pomodoro Technique with progression mechanics. Each completed work session contributes to your growth metrics and persisted stats.
 
+## Live Demo
+
+- Vercel: [https://neural-architect.vercel.app/](https://neural-architect.vercel.app/)
+
 ## Tech Stack
 
 - TypeScript (strict mode)
@@ -37,6 +41,8 @@ npm install
 npm run dev
 ```
 
+The Vite dev server starts at `http://localhost:5173`.
+
 ### Build
 
 ```bash
@@ -49,6 +55,14 @@ npm run build
 npm run type-check
 npm run lint
 ```
+
+## NPM Scripts
+
+- `npm run dev` - start development server
+- `npm run build` - generate production build
+- `npm run preview` - preview production build locally
+- `npm run type-check` - run TypeScript checks
+- `npm run lint` - run ESLint
 
 ## Project Structure
 
@@ -70,3 +84,7 @@ neural-architect/
 ## State Management
 
 The app uses Zustand with `localStorage` persistence configured in `src/stores/setup.ts`.
+
+## Path Alias
+
+- `@/*` -> `./src/*`

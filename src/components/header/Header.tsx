@@ -29,9 +29,16 @@ export function Header({ onOpenSettings }: HeaderProps) {
     <header className="border-b border-border bg-background-secondary/70 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div className="min-w-0">
-          <p className="truncate text-lg font-semibold tracking-tight text-foreground sm:text-xl">
-            Neural Architect
-          </p>
+          <div className="flex items-center gap-2">
+            <img
+              src="/icon.png"
+              alt="Neural Architect logo"
+              className="h-8 w-auto shrink-0 sm:h-9"
+            />
+            <p className="truncate text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+              Neural Architect
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-3 sm:gap-4">

@@ -15,6 +15,7 @@ export default {
         },
         primary: {
           DEFAULT: 'var(--color-primary)',
+          foreground: 'var(--color-primary-foreground)',
           50: 'var(--color-primary-50)',
           100: 'var(--color-primary-100)',
           200: 'var(--color-primary-200)',
@@ -38,6 +39,10 @@ export default {
           700: 'var(--color-accent-700)',
           800: 'var(--color-accent-800)',
           900: 'var(--color-accent-900)',
+        },
+        secondary: {
+          DEFAULT: 'var(--color-secondary)',
+          foreground: 'var(--color-secondary-foreground)',
         },
         success: {
           DEFAULT: 'var(--color-success)',

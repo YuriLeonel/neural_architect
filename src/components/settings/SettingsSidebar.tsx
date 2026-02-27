@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 import { CategorySelector } from './CategorySelector';
 import { IntervalConfig } from './IntervalConfig';
 
@@ -64,10 +65,10 @@ export function SettingsSidebar({ isOpen, onClose }: SettingsSidebarProps) {
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-xl leading-none text-foreground transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               aria-label="Close settings"
             >
-              ×
+              <CloseIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
 

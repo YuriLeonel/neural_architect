@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { useTimerStore } from '@/stores/setup';
 
 const FOCUS_MIN_MINUTES = 5;
@@ -43,9 +45,9 @@ function IntervalStepper({ label, value, min, max, step, onChange }: StepperProp
           onClick={() => onChange(value - step)}
           disabled={!canDecrease}
           aria-label={`Decrease ${label.toLowerCase()}`}
-          className="h-9 w-9 rounded-md border border-border bg-background text-lg text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-          -
+          <RemoveIcon className="h-5 w-5" aria-hidden="true" />
         </button>
         <output className="min-w-20 text-center text-sm font-semibold text-foreground">
           {value} min
@@ -55,9 +57,9 @@ function IntervalStepper({ label, value, min, max, step, onChange }: StepperProp
           onClick={() => onChange(value + step)}
           disabled={!canIncrease}
           aria-label={`Increase ${label.toLowerCase()}`}
-          className="h-9 w-9 rounded-md border border-border bg-background text-lg text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-          +
+          <AddIcon className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
     </div>

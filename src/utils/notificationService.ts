@@ -10,12 +10,12 @@ function getNotificationContent(payload: TimerNotificationPayload): Notification
     case 'FOCUS_COMPLETE':
       return {
         title: 'Focus Complete',
-        body: 'Focus Session Complete. Commencing recovery phase.',
+        body: 'Focus Session Complete. We recommend a short break to reset your mind.',
       };
     case 'BREAK_COMPLETE':
       return {
         title: 'Break Complete',
-        body: 'Break Concluded. Return to deep work state.',
+        body: 'Break Concluded. Return to deep work to continue your focus session.',
       };
     default: {
       const exhaustiveCheck: never = payload;

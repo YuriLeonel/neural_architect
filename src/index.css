@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --color-background: #ffffff;
-  --color-background-secondary: #f4f4f5;
-  --color-foreground: #18181b;
-  --color-foreground-secondary: #52525b;
+  --color-background: #fcfcfd;
+  --color-background-secondary: #f2f2f4;
+  --color-foreground: #1e1e24;
+  --color-foreground-secondary: #5b5b66;
   --color-primary: #6366f1;
   --color-primary-foreground: #ffffff;
   --color-primary-50: #eef2ff;
@@ -48,10 +48,10 @@
 }
 
 .dark {
-  --color-background: #0a0a0f;
-  --color-background-secondary: #141420;
-  --color-foreground: #f5f5f7;
-  --color-foreground-secondary: #a1a1aa;
+  --color-background: #13131a;
+  --color-background-secondary: #1b1b25;
+  --color-foreground: #ececf1;
+  --color-foreground-secondary: #adadb7;
   --color-primary: #6366f1;
   --color-primary-foreground: #ffffff;
   --color-primary-50: #eef2ff;

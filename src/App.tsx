@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { useSessionStore, useTimerStore } from '@/stores/setup';
-import { PhaseTabSelector } from '@/components/PhaseTabSelector';
-import { TimerDisplay } from '@/components/TimerDisplay';
-import { TimerControls } from '@/components/TimerControls';
-import { CategorySelector } from '@/components/CategorySelector';
-import { IntervalConfig } from '@/components/IntervalConfig';
+import {
+  CategorySelector,
+  IntervalConfig,
+  PhaseTabSelector,
+  TimerControls,
+  TimerDisplay,
+} from '@/components';
 import { useWakeLock } from '@/hooks/useWakeLock';
 
 function App() {

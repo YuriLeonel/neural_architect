@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 import { TIMER_PHASES } from '@/constants/timer';
 import { useTimerStore } from '@/stores/setup';
-import { ResetConfirmDialog } from '@/components/ResetConfirmDialog';
 import { requestPermission } from '@/utils/notificationService';
+import { ResetConfirmDialog } from './ResetConfirmDialog';
 
 export function TimerControls() {
   const permissionRequested = useRef(false);

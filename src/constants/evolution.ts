@@ -1,3 +1,5 @@
+import type { ArchitectureTier } from '../types';
+
 const BASE_EXP_MULTIPLIER = 100;
 const EXP_CURVE_EXPONENT = 1.5;
 
@@ -62,3 +64,28 @@ export const LEVEL_MILESTONES = [
   { level: 40, feature: 'unlock_advanced_analytics' },
   { level: 50, feature: 'unlock_legendary_architecture' },
 ] as const;
+
+export const NEURON_LEVEL_COLORS = {
+  BASIC: 'var(--color-neuron-basic)',
+  INTERMEDIATE: 'var(--color-neuron-intermediate)',
+  ADVANCED: 'var(--color-neuron-advanced)',
+  EXPERT: 'var(--color-neuron-expert)',
+  MASTER: 'var(--color-neuron-master)',
+} as const;
+
+export function getNeuronColor(level: number): string {
+  if (level >= 20) return NEURON_LEVEL_COLORS.MASTER;
+  if (level >= 15) return NEURON_LEVEL_COLORS.EXPERT;
+  if (level >= 10) return NEURON_LEVEL_COLORS.ADVANCED;
+  if (level >= 5) return NEURON_LEVEL_COLORS.INTERMEDIATE;
+  return NEURON_LEVEL_COLORS.BASIC;
+}
+
+export function getArchitectureTier(level: number): ArchitectureTier {
+  if (level >= 50) return 'legendary';
+  if (level >= 35) return 'master';
+  if (level >= 25) return 'expert';
+  if (level >= 15) return 'advanced';
+  if (level >= 5) return 'intermediate';
+  return 'basic';
+}

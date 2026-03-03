@@ -41,6 +41,11 @@
   --color-error: #ef4444;
   --color-error-light: #f87171;
   --color-error-dark: #dc2626;
+  --color-neuron-basic: #6366f1;
+  --color-neuron-intermediate: #10b981;
+  --color-neuron-advanced: #8b5cf6;
+  --color-neuron-expert: #f59e0b;
+  --color-neuron-master: #f43f5e;
   --color-muted: #e4e4e7;
   --color-muted-foreground: #71717a;
   --color-border: #d4d4d8;
@@ -86,6 +91,11 @@
   --color-error: #ef4444;
   --color-error-light: #f87171;
   --color-error-dark: #dc2626;
+  --color-neuron-basic: #6366f1;
+  --color-neuron-intermediate: #10b981;
+  --color-neuron-advanced: #8b5cf6;
+  --color-neuron-expert: #f59e0b;
+  --color-neuron-master: #f43f5e;
   --color-muted: #3f3f46;
   --color-muted-foreground: #71717a;
   --color-border: #27272a;

@@ -1,5 +1,5 @@
 import {
-  createEvolutionStore,
+  createPalaceStore,
   createSessionStore,
   createTimerStore,
   createUserStatsStore,
@@ -34,8 +34,7 @@ function createJsonStorageAdapter() {
 
 const storage = createJsonStorageAdapter();
 
-export const useEvolutionStore = createEvolutionStore(storage);
-
+export const usePalaceStore = createPalaceStore(storage);
 export const useUserStatsStore = createUserStatsStore(storage);
 
 export const useSessionStore = createSessionStore(storage);
@@ -43,7 +42,7 @@ export const useSessionStore = createSessionStore(storage);
 export const useTimerStore = createTimerStore(storage, {
   onFocusSessionCompleted: (record) => {
     useSessionStore.getState().recordSession(record);
-    useEvolutionStore.getState().addExperience(record.xpEarned);
+    usePalaceStore.getState().distributeXp(record.category, record.tagIds, record.xpEarned);
   },
   onPhaseCompleted: (completedPhase) => {
     const payload: TimerNotificationPayload =

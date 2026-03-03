@@ -1,4 +1,4 @@
 export * from './timerStore';
-export * from './evolutionStore';
+export * from './palaceStore';
 export * from './userStatsStore';
 export * from './sessionStore';

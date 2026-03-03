@@ -1,16 +1,21 @@
 import { useMemo } from 'react';
-import { usePalaceStore } from '@/stores/setup';
+import { usePalaceStore, useTimerStore } from '@/stores/setup';
 import { BackgroundLayer } from './BackgroundLayer';
-import { EnvironmentSelector } from './EnvironmentSelector';
 import { NeuronMap } from './NeuronMap';
 
 export function MindPalaceView() {
-  const activeEnvironment = usePalaceStore((state) => state.activeEnvironment);
+  const currentCategory = useTimerStore((state) => state.config.currentCategory);
+  const categoryBackgrounds = usePalaceStore((state) => state.categoryBackgrounds);
   const customBackgroundUrl = usePalaceStore((state) => state.customBackgroundUrl);
   const neurons = usePalaceStore((state) => state.neurons);
+  const activeEnvironment = categoryBackgrounds[currentCategory];
 
   const unlockedCount = useMemo(
     () => Object.values(neurons).filter((neuron) => neuron.unlocked).length,
+    [neurons],
+  );
+  const totalXp = useMemo(
+    () => Object.values(neurons).reduce((sum, neuron) => sum + neuron.totalXp, 0),
     [neurons],
   );
 
@@ -33,14 +38,8 @@ export function MindPalaceView() {
         <div className="rounded-2xl border border-white/20 bg-black/35 p-5 text-sm shadow-xl backdrop-blur-md">
           <p className="text-white/80">Unlocked neurons</p>
           <p className="mt-1 text-2xl font-semibold text-white">{unlockedCount}</p>
-          <p className="mt-2 text-xs text-white/85">
-            Active environment:{' '}
-            <span className="font-medium capitalize text-white">{activeEnvironment.replace('_', ' ')}</span>
-          </p>
-        </div>
-
-        <div className="mt-auto">
-          <EnvironmentSelector />
+          <p className="mt-3 text-white/80">Total XP</p>
+          <p className="mt-1 text-2xl font-semibold text-white">{totalXp}</p>
         </div>
       </div>
     </section>

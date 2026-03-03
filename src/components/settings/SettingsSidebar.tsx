@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { ViewNavigation, type AppView } from '@/components/navigation';
+import { BackgroundPicker } from './BackgroundPicker';
 import { CategorySelector } from './CategorySelector';
 import { IntervalConfig } from './IntervalConfig';
 
@@ -93,6 +94,13 @@ export function SettingsSidebar({
                 Categories
               </h3>
               <CategorySelector />
+            </section>
+
+            <section aria-label="Palace background configuration" className="space-y-3">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Palace Background
+              </h3>
+              <BackgroundPicker />
             </section>
 
             <section aria-label="Timer interval configuration" className="space-y-3">

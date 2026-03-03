@@ -1,3 +1,5 @@
+import type { SessionCategory } from './session';
+
 export type EnvironmentType = 'library' | 'coffee_shop' | 'house' | 'custom';
 
 export interface NeuronState {
@@ -9,7 +11,7 @@ export interface NeuronState {
 }
 
 export interface MindPalaceState {
-  activeEnvironment: EnvironmentType;
+  categoryBackgrounds: Record<SessionCategory, EnvironmentType>;
   customBackgroundUrl: string | null;
   neurons: Record<string, NeuronState>;
 }

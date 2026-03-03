@@ -22,7 +22,11 @@ function getTagLabelFromId(tagId: string): string {
 }
 
 export interface PalaceStore extends MindPalaceState {
-  setEnvironment: (env: EnvironmentType, url?: string) => void;
+  setCategoryBackground: (
+    category: SessionCategory,
+    environment: EnvironmentType,
+    customUrl?: string,
+  ) => void;
   distributeXp: (category: SessionCategory, tagIds: string[], totalXp: number) => void;
   ensureNeuron: (id: string, label: string) => void;
 }
@@ -31,14 +35,28 @@ export function createPalaceStore(storage: PersistOptions<PalaceStore>['storage'
   return create<PalaceStore>()(
     persist<PalaceStore>(
       (set, get): PalaceStore => ({
-        activeEnvironment: 'library',
+        categoryBackgrounds: {
+          work: 'library',
+          study: 'coffee_shop',
+          training: 'house',
+          custom: 'custom',
+        },
         customBackgroundUrl: null,
         neurons: {},
-        setEnvironment: (env: EnvironmentType, url?: string) => {
+        setCategoryBackground: (
+          category: SessionCategory,
+          environment: EnvironmentType,
+          customUrl?: string,
+        ) => {
           set((state) => ({
-            activeEnvironment: env,
+            categoryBackgrounds: {
+              ...state.categoryBackgrounds,
+              [category]: environment,
+            },
             customBackgroundUrl:
-              env === 'custom' ? (url ?? state.customBackgroundUrl) : state.customBackgroundUrl,
+              environment === 'custom'
+                ? (customUrl ?? state.customBackgroundUrl)
+                : state.customBackgroundUrl,
           }));
         },
         ensureNeuron: (id: string, label: string) => {

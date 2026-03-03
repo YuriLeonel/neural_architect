@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { usePalaceStore } from '@/stores/setup';
 import { BackgroundLayer } from './BackgroundLayer';
 import { EnvironmentSelector } from './EnvironmentSelector';
+import { NeuronMap } from './NeuronMap';
 
 export function MindPalaceView() {
   const activeEnvironment = usePalaceStore((state) => state.activeEnvironment);
@@ -24,12 +25,12 @@ export function MindPalaceView() {
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-73px)] w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:px-8">
         <div className="space-y-3 text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-white drop-shadow-sm">Mind Palace</h2>
-          <p className="text-sm text-white/85">
-            Set the ambience while the neuron map is being prepared.
-          </p>
+          <p className="text-sm text-white/85">Watch your XP growth take shape as living neurons.</p>
         </div>
 
-        <div className="mt-2 rounded-2xl border border-white/20 bg-black/35 p-5 text-sm shadow-xl backdrop-blur-md">
+        <NeuronMap />
+
+        <div className="rounded-2xl border border-white/20 bg-black/35 p-5 text-sm shadow-xl backdrop-blur-md">
           <p className="text-white/80">Unlocked neurons</p>
           <p className="mt-1 text-2xl font-semibold text-white">{unlockedCount}</p>
           <p className="mt-2 text-xs text-white/85">

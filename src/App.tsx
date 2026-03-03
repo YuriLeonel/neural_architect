@@ -40,7 +40,13 @@ function App() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header onOpenSettings={() => setIsSettingsOpen(true)} />
-      <main className="mx-auto flex min-h-[calc(100vh-73px)] w-full max-w-5xl flex-col items-center justify-center gap-8 px-4 py-10 sm:px-6">
+      <main
+        className={
+          activeView === 'palace'
+            ? 'min-h-[calc(100vh-73px)] w-full'
+            : 'mx-auto flex min-h-[calc(100vh-73px)] w-full max-w-5xl flex-col items-center justify-center gap-8 px-4 py-10 sm:px-6'
+        }
+      >
         {activeView === 'timer' ? (
           <div className="flex w-full flex-col items-center gap-8">
             <PhaseTabSelector />

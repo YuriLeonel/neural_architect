@@ -6,7 +6,7 @@ import type { EnvironmentType, MindPalaceState, SessionCategory } from '../types
 const CATEGORY_NEURON_LABELS: Record<Exclude<SessionCategory, 'custom'>, string> = {
   work: 'Work',
   study: 'Study',
-  training: 'Training',
+  read: 'Read',
 };
 
 function getCategoryNeuronId(category: Exclude<SessionCategory, 'custom'>): string {
@@ -36,9 +36,9 @@ export function createPalaceStore(storage: PersistOptions<PalaceStore>['storage'
     persist<PalaceStore>(
       (set, get): PalaceStore => ({
         categoryBackgrounds: {
-          work: 'library',
-          study: 'coffee_shop',
-          training: 'house',
+          work: 'coffee_shop',
+          study: 'library',
+          read: 'house',
           custom: 'custom',
         },
         customBackgroundUrl: null,

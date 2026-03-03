@@ -13,7 +13,7 @@ interface CategoryOption {
 const CATEGORY_OPTIONS: CategoryOption[] = [
   { label: 'Work', value: 'work' },
   { label: 'Study', value: 'study' },
-  { label: 'Training', value: 'training' },
+  { label: 'Read', value: 'read' },
   { label: 'Custom', value: 'custom' },
 ];
 

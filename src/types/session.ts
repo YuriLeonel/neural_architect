@@ -1,6 +1,6 @@
 import type { TimerPhase } from './timer';
 
-export const SESSION_CATEGORIES = ['work', 'study', 'training', 'custom'] as const;
+export const SESSION_CATEGORIES = ['work', 'study', 'read', 'custom'] as const;
 
 export type SessionCategory = (typeof SESSION_CATEGORIES)[number];
 

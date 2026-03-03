@@ -14,7 +14,7 @@ const ENVIRONMENT_OPTIONS: ReadonlyArray<{ id: EnvironmentType; label: string }>
 const CATEGORY_LABELS: Record<SessionCategory, string> = {
   work: 'Work',
   study: 'Study',
-  training: 'Training',
+  read: 'Read',
   custom: 'Custom',
 };
 

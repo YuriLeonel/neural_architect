@@ -54,6 +54,13 @@ export default {
           light: 'var(--color-warning-light)',
           dark: 'var(--color-warning-dark)',
         },
+        neuron: {
+          basic: 'var(--color-neuron-basic)',
+          intermediate: 'var(--color-neuron-intermediate)',
+          advanced: 'var(--color-neuron-advanced)',
+          expert: 'var(--color-neuron-expert)',
+          master: 'var(--color-neuron-master)',
+        },
         error: {
           DEFAULT: 'var(--color-error)',
           light: 'var(--color-error-light)',

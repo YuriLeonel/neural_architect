@@ -41,6 +41,11 @@
   --color-error: #ef4444;
   --color-error-light: #f87171;
   --color-error-dark: #dc2626;
+  --color-neuron-basic: #6366f1;
+  --color-neuron-intermediate: #10b981;
+  --color-neuron-advanced: #8b5cf6;
+  --color-neuron-expert: #f59e0b;
+  --color-neuron-master: #f43f5e;
   --color-muted: #e4e4e7;
   --color-muted-foreground: #71717a;
   --color-border: #d4d4d8;
@@ -86,8 +91,91 @@
   --color-error: #ef4444;
   --color-error-light: #f87171;
   --color-error-dark: #dc2626;
+  --color-neuron-basic: #6366f1;
+  --color-neuron-intermediate: #10b981;
+  --color-neuron-advanced: #8b5cf6;
+  --color-neuron-expert: #f59e0b;
+  --color-neuron-master: #f43f5e;
   --color-muted: #3f3f46;
   --color-muted-foreground: #71717a;
   --color-border: #27272a;
   --color-ring: #3f3f46;
+}
+
+.palace-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.88;
+}
+
+.palace-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.22), transparent 56%);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  animation: palace-bg-drift 18s ease-in-out infinite alternate;
+}
+
+.palace-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.18));
+}
+
+@keyframes palace-bg-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(0, -2.5%, 0) scale(1.04);
+  }
+}
+
+.neuron-node {
+  will-change: transform, box-shadow, filter, opacity;
+}
+
+.neuron-node--locked {
+  filter: grayscale(1);
+  opacity: 0.4;
+}
+
+.animate-neuron-pulse {
+  animation: neuron-pulse 1.8s ease-in-out infinite;
+}
+
+.animate-neuron-glow {
+  animation: neuron-glow 2.8s ease-in-out infinite;
+}
+
+@keyframes neuron-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24), 0 0 16px rgba(255, 255, 255, 0.2),
+      0 0 36px rgba(255, 255, 255, 0.22);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.32), 0 0 20px rgba(255, 255, 255, 0.35),
+      0 0 48px rgba(255, 255, 255, 0.36);
+  }
+}
+
+@keyframes neuron-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 0 14px rgba(255, 255, 255, 0.16),
+      0 0 28px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.26), 0 0 18px rgba(255, 255, 255, 0.22),
+      0 0 38px rgba(255, 255, 255, 0.24);
+  }
 }

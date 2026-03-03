@@ -1,14 +1,23 @@
 import { useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import { ViewNavigation, type AppView } from '@/components/navigation';
+import { BackgroundPicker } from './BackgroundPicker';
 import { CategorySelector } from './CategorySelector';
 import { IntervalConfig } from './IntervalConfig';
 
 interface SettingsSidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  activeView: AppView;
+  onChangeView: (view: AppView) => void;
 }
 
-export function SettingsSidebar({ isOpen, onClose }: SettingsSidebarProps) {
+export function SettingsSidebar({
+  isOpen,
+  onClose,
+  activeView,
+  onChangeView,
+}: SettingsSidebarProps) {
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -73,11 +82,25 @@ export function SettingsSidebar({ isOpen, onClose }: SettingsSidebarProps) {
           </div>
 
           <div className="flex-1 space-y-6 overflow-y-auto px-5 py-6">
+            <section aria-label="View navigation configuration" className="space-y-3">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Views
+              </h3>
+              <ViewNavigation activeView={activeView} onChangeView={onChangeView} />
+            </section>
+
             <section aria-label="Session category configuration" className="space-y-3">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Categories
               </h3>
               <CategorySelector />
+            </section>
+
+            <section aria-label="Palace background configuration" className="space-y-3">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Palace Background
+              </h3>
+              <BackgroundPicker />
             </section>
 
             <section aria-label="Timer interval configuration" className="space-y-3">

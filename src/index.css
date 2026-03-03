@@ -128,28 +128,6 @@
   background: linear-gradient(160deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.18));
 }
 
-.palace-bg--library {
-  background-image:
-    radial-gradient(circle at 25% 18%, rgba(253, 224, 163, 0.46), transparent 48%),
-    linear-gradient(145deg, #4b2e1f 0%, #6e4c33 45%, #bb8a5f 100%);
-}
-
-.palace-bg--coffee_shop {
-  background-image:
-    radial-gradient(circle at 78% 22%, rgba(255, 209, 153, 0.35), transparent 52%),
-    linear-gradient(140deg, #2f1f18 0%, #5a3928 50%, #8a5a3b 100%);
-}
-
-.palace-bg--house {
-  background-image:
-    radial-gradient(circle at 22% 22%, rgba(180, 209, 255, 0.32), transparent 50%),
-    linear-gradient(150deg, #1f2a44 0%, #334663 48%, #55708f 100%);
-}
-
-.palace-bg--custom {
-  background-image: linear-gradient(150deg, #1f2937 0%, #111827 100%);
-}
-
 @keyframes palace-bg-drift {
   0% {
     transform: translate3d(0, 0, 0) scale(1);

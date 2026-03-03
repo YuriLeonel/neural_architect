@@ -1,76 +1,7 @@
 import { useMemo } from 'react';
 import { usePalaceStore, useTimerStore } from '@/stores/setup';
-import type { NeuronState } from '@/types';
 import { NeuronNode } from './NeuronNode';
-
-interface PositionedNeuron {
-  neuron: NeuronState;
-  x: number;
-  y: number;
-}
-
-function sortNeurons(a: NeuronState, b: NeuronState): number {
-  const aIsCategory = a.id.startsWith('cat:');
-  const bIsCategory = b.id.startsWith('cat:');
-
-  if (aIsCategory !== bIsCategory) {
-    return aIsCategory ? -1 : 1;
-  }
-
-  return a.label.localeCompare(b.label);
-}
-
-function getRadius(totalNeurons: number): number {
-  if (totalNeurons <= 1) {
-    return 0;
-  }
-
-  return Math.min(42, Math.max(24, 18 + totalNeurons * 2.2));
-}
-
-function calculatePositions(neurons: NeuronState[]): PositionedNeuron[] {
-  if (neurons.length === 0) {
-    return [];
-  }
-
-  if (neurons.length === 1) {
-    const [singleNeuron] = neurons;
-    if (!singleNeuron) {
-      return [];
-    }
-    return [{ neuron: singleNeuron, x: 50, y: 50 }];
-  }
-
-  const radius = getRadius(neurons.length);
-
-  return neurons.map((neuron, index) => {
-    const angle = (index / neurons.length) * 2 * Math.PI;
-    const x = 50 + radius * Math.cos(angle);
-    const y = 50 + radius * Math.sin(angle);
-    return { neuron, x, y };
-  });
-}
-
-function getActiveNeuronIds(
-  isRunning: boolean,
-  phase: 'focus' | 'break',
-  category: 'work' | 'study' | 'training' | 'custom',
-  activeTags: string[],
-): Set<string> {
-  if (!isRunning || phase !== 'focus') {
-    return new Set<string>();
-  }
-
-  if (activeTags.length > 0) {
-    return new Set(activeTags);
-  }
-
-  if (category === 'custom') {
-    return new Set<string>();
-  }
-
-  return new Set<string>([`cat:${category}`]);
-}
+import { calculatePositions, getActiveNeuronIds, sortNeurons } from './neuronUtils';
 
 export function NeuronMap() {
   const neurons = usePalaceStore((state) => state.neurons);

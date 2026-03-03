@@ -1,23 +1,15 @@
-import { getNeuronColor } from '@/constants/evolution';
 import type { NeuronState } from '@/types';
-
-const BASE_SIZE_PX = 56;
-const MAX_SIZE_PX = 136;
+import { getNeuronSize, getNeuronStyle } from './neuronUtils';
 
 interface NeuronNodeProps {
   neuron: NeuronState;
   isActive: boolean;
 }
 
-function getNeuronSize(level: number): number {
-  const scaledSize = BASE_SIZE_PX * (1 + level * 0.1);
-  return Math.min(MAX_SIZE_PX, Math.max(BASE_SIZE_PX, Math.round(scaledSize)));
-}
-
 export function NeuronNode({ neuron, isActive }: NeuronNodeProps) {
   const unlocked = neuron.unlocked;
-  const neuronColor = getNeuronColor(neuron.level);
   const size = getNeuronSize(neuron.level);
+  const style = getNeuronStyle(neuron.level, unlocked, isActive);
 
   return (
     <article
@@ -37,10 +29,7 @@ export function NeuronNode({ neuron, isActive }: NeuronNodeProps) {
         style={{
           width: `${size}px`,
           height: `${size}px`,
-          background: `radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.3), ${neuronColor})`,
-          boxShadow: unlocked
-            ? `0 0 0 1px rgba(255,255,255,0.2), 0 0 20px ${neuronColor}, 0 0 36px ${neuronColor}`
-            : '0 0 0 1px rgba(255,255,255,0.12)',
+          ...style,
         }}
       >
         <span className="text-xs font-semibold text-white/95 sm:text-sm">Lv {neuron.level}</span>

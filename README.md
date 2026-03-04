@@ -1,10 +1,14 @@
 # Neural Architect
 
-A simple but functional Pomodoro web application with gamified progression.
+A Pomodoro web application focused on completion momentum through gamified progression.
 
 ## Overview
 
-Neural Architect combines the Pomodoro Technique with progression mechanics. Each completed work session contributes to your growth metrics and persisted stats.
+Neural Architect combines the Pomodoro Technique with Mind Palace progression mechanics to reinforce completing focused sessions. Each completed focus session contributes to your growth metrics and persisted stats.
+
+## Business Rules
+
+Product behavior rules for timer flow, session lifecycle, and Mind Palace XP attribution live in [`docs/business-rules.md`](docs/business-rules.md). Treat that document as the source of truth when implementing or verifying behavior.
 
 ## Live Demo
 
@@ -16,11 +20,6 @@ Neural Architect combines the Pomodoro Technique with progression mechanics. Eac
 - React + Vite
 - Zustand with persistence
 - Tailwind CSS
-
-## Evolution Formulas
-
-- Experience to next level: `100 * (level ^ 1.5)`
-- Reward: `(t * 10) * m`
 
 ## Getting Started
 
@@ -68,6 +67,8 @@ npm run lint
 
 ```text
 neural-architect/
+├── docs/
+│   └── business-rules.md # Product behavior source of truth
 ├── src/
 │   ├── components/      # UI components
 │   ├── stores/          # Zustand stores and setup
@@ -76,6 +77,7 @@ neural-architect/
 │   └── utils/           # Shared utility helpers
 ├── index.html
 ├── package.json
+├── README.md
 ├── tsconfig.json
 ├── tailwind.config.js
 └── vite.config.ts

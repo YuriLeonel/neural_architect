@@ -31,7 +31,10 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Header onOpenSettings={() => setIsSettingsOpen(true)} />
+      <Header
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onGoHome={() => setActiveView('timer')}
+      />
       <main className="min-h-[calc(100vh-73px)] w-full">
         {activeView === 'timer' ? <TimerView /> : <MindPalaceView />}
       </main>

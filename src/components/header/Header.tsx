@@ -23,6 +23,9 @@ export function Header({ onOpenSettings, onGoHome }: HeaderProps) {
             <img
               src="/icon.png"
               alt="Neural Architect logo"
+              width={36}
+              height={36}
+              loading="eager"
               className="h-8 w-auto shrink-0 sm:h-9"
             />
             <p className="truncate text-lg font-semibold tracking-tight text-foreground sm:text-xl">

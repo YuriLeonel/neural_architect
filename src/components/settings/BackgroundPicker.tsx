@@ -1,8 +1,9 @@
 import { ChangeEvent, useId, useMemo, useState } from 'react';
 import { usePalaceStore, useTimerStore } from '@/stores/setup';
 import type { EnvironmentType, SessionCategory } from '@/types';
+import { saveCustomBackground } from '@/utils/imageStorage';
 
-const MAX_CUSTOM_IMAGE_BYTES = 2 * 1024 * 1024;
+const MAX_CUSTOM_IMAGE_BYTES = 10 * 1024 * 1024;
 
 const ENVIRONMENT_OPTIONS: ReadonlyArray<{ id: EnvironmentType; label: string }> = [
   { id: 'library', label: 'Library' },
@@ -17,14 +18,6 @@ const CATEGORY_LABELS: Record<SessionCategory, string> = {
   read: 'Read',
   custom: 'Custom',
 };
-
-function normalizeFileReadResult(result: string | ArrayBuffer | null): string | null {
-  if (typeof result !== 'string') {
-    return null;
-  }
-
-  return result.startsWith('data:image/') ? result : null;
-}
 
 export function BackgroundPicker() {
   const currentCategory = useTimerStore((state) => state.config.currentCategory);
@@ -48,7 +41,7 @@ export function BackgroundPicker() {
     setHasError(false);
   };
 
-  const handleCustomImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleCustomImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = '';
 
@@ -63,29 +56,20 @@ export function BackgroundPicker() {
     }
 
     if (file.size > MAX_CUSTOM_IMAGE_BYTES) {
-      setFeedback('Image must be 2MB or smaller.');
+      setFeedback('Image must be 10MB or smaller.');
       setHasError(true);
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = normalizeFileReadResult(reader.result);
-      if (!dataUrl) {
-        setFeedback('Failed to load image. Please choose another file.');
-        setHasError(true);
-        return;
-      }
-
-      setCategoryBackground(currentCategory, 'custom', dataUrl);
+    try {
+      await saveCustomBackground(file);
+      setCategoryBackground(currentCategory, 'custom', 'indexeddb');
       setFeedback(`Custom background set for ${currentCategoryLabel}.`);
       setHasError(false);
-    };
-    reader.onerror = () => {
-      setFeedback('Failed to read image from disk.');
+    } catch {
+      setFeedback('Failed to save image. Please try again.');
       setHasError(true);
-    };
-    reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -131,7 +115,7 @@ export function BackgroundPicker() {
       </div>
 
       <p className="text-xs text-muted-foreground">
-        Max file size: 2MB. {customBackgroundUrl ? 'A custom image is currently saved.' : 'No custom image selected yet.'}
+        Max file size: 10MB. {customBackgroundUrl === 'indexeddb' ? 'A custom image is currently saved.' : 'No custom image selected yet.'}
       </p>
 
       {feedback ? (

@@ -1,7 +1,8 @@
-import { memo } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import type { EnvironmentType } from '@/types';
 import { getResponsiveBackgroundUrl } from '@/utils/backgroundImages';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
+import { loadCustomBackground } from '@/utils/imageStorage';
 
 interface BackgroundLayerProps {
   environment: EnvironmentType;
@@ -9,17 +10,58 @@ interface BackgroundLayerProps {
 }
 
 function BackgroundLayerBase({ environment, customBackgroundUrl }: BackgroundLayerProps) {
-  const hasCustomImage =
-    environment === 'custom' &&
-    typeof customBackgroundUrl === 'string' &&
-    customBackgroundUrl.startsWith('data:image/');
+  const [resolvedBlobUrl, setResolvedBlobUrl] = useState<string | null>(null);
+  const prevBlobUrlRef = useRef<string | null>(null);
 
-  const backgroundUrl =
-    environment === 'custom'
-      ? hasCustomImage
-        ? customBackgroundUrl
-        : null
-      : getResponsiveBackgroundUrl(environment);
+  const isIndexedDb =
+    environment === 'custom' && customBackgroundUrl === 'indexeddb';
+
+  useEffect(() => {
+    if (!isIndexedDb) {
+      if (prevBlobUrlRef.current) {
+        URL.revokeObjectURL(prevBlobUrlRef.current);
+        prevBlobUrlRef.current = null;
+      }
+      setResolvedBlobUrl(null);
+      return;
+    }
+
+    let cancelled = false;
+    loadCustomBackground().then((url) => {
+      if (cancelled) {
+        if (url) URL.revokeObjectURL(url);
+        return;
+      }
+      if (prevBlobUrlRef.current) {
+        URL.revokeObjectURL(prevBlobUrlRef.current);
+      }
+      prevBlobUrlRef.current = url;
+      setResolvedBlobUrl(url);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isIndexedDb]);
+
+  useEffect(() => {
+    return () => {
+      if (prevBlobUrlRef.current) {
+        URL.revokeObjectURL(prevBlobUrlRef.current);
+        prevBlobUrlRef.current = null;
+      }
+    };
+  }, []);
+
+  const backgroundUrl = (() => {
+    if (environment !== 'custom') {
+      return getResponsiveBackgroundUrl(environment);
+    }
+    if (isIndexedDb) {
+      return resolvedBlobUrl;
+    }
+    return null;
+  })();
 
   const { loaded } = useBackgroundImage(backgroundUrl);
 

@@ -6,6 +6,7 @@ import {
 } from '@/stores';
 import type { TimerNotificationPayload } from '@/types';
 import { sendTimerNotification } from '@/utils/notificationService';
+import { saveCustomBackground } from '@/utils/imageStorage';
 
 function createJsonStorageAdapter() {
   return {
@@ -35,6 +36,23 @@ function createJsonStorageAdapter() {
 const storage = createJsonStorageAdapter();
 
 export const usePalaceStore = createPalaceStore(storage);
+
+// One-time migration: base64 data URLs in customBackgroundUrl -> IndexedDB blob
+(function migrateCustomBackground() {
+  const customUrl = usePalaceStore.getState().customBackgroundUrl;
+  if (typeof customUrl === 'string' && customUrl.startsWith('data:image/')) {
+    fetch(customUrl)
+      .then((r) => r.blob())
+      .then((blob) => saveCustomBackground(blob))
+      .then(() => {
+        usePalaceStore.setState({ customBackgroundUrl: 'indexeddb' });
+      })
+      .catch(() => {
+        // Migration failed — leave the existing data URL in place
+      });
+  }
+})();
+
 export const useUserStatsStore = createUserStatsStore(storage);
 
 export const useSessionStore = createSessionStore(storage);

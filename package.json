@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "lint": "biome lint src/**/*.ts src/**/*.tsx",
     "type-check": "tsc --noEmit",
-    "optimize-images": "node scripts/optimize-images.js"
+    "optimize-images": "node scripts/optimize-images.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -26,12 +29,14 @@
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^4.1.4",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^4.1.4"
   },
   "engines": {
     "node": ">=18.0.0",

@@ -89,3 +89,13 @@ export function getArchitectureTier(level: number): ArchitectureTier {
   if (level >= 5) return 'intermediate';
   return 'basic';
 }
+
+export type ProgressTier = 1 | 2 | 3 | 4 | 5;
+
+export function getProgressTier(highestLevel: number): ProgressTier {
+  if (highestLevel >= 20) return 5;
+  if (highestLevel >= 15) return 4;
+  if (highestLevel >= 10) return 3;
+  if (highestLevel >= 5) return 2;
+  return 1;
+}

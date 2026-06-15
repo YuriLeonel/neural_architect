@@ -3,6 +3,8 @@ import type { EnvironmentType } from '@/types';
 import { getResponsiveBackgroundUrl } from '@/utils/backgroundImages';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { loadCustomBackground } from '@/utils/imageStorage';
+import { getProgressTier } from '@/constants/evolution';
+import { usePalaceStore } from '@/stores/setup';
 
 interface BackgroundLayerProps {
   environment: EnvironmentType;
@@ -53,6 +55,12 @@ function BackgroundLayerBase({ environment, customBackgroundUrl }: BackgroundLay
     };
   }, []);
 
+  const neurons = usePalaceStore((state) => state.neurons);
+  const highestLevel = Object.keys(neurons).length > 0
+    ? Math.max(...Object.values(neurons).map((n) => n.level))
+    : 0;
+  const tier = getProgressTier(highestLevel);
+
   const backgroundUrl = (() => {
     if (environment !== 'custom') {
       return getResponsiveBackgroundUrl(environment);
@@ -73,7 +81,7 @@ function BackgroundLayerBase({ environment, customBackgroundUrl }: BackgroundLay
 
   return (
     <div
-      className={`palace-bg${loaded ? ' palace-bg--loaded' : ''}`}
+      className={`palace-bg palace-bg--tier-${tier}${loaded ? ' palace-bg--loaded' : ''}`}
       style={style}
       aria-hidden="true"
     />

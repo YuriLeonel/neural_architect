@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTimerStore } from '@/stores/setup';
 import { Header, MindPalaceView, SettingsSidebar, TimerView } from '@/components';
+import { XpToast } from '@/components/palace';
 import type { AppView } from '@/components/navigation';
 import { useTheme } from '@/hooks/useTheme';
 import { useWakeLock } from '@/hooks/useWakeLock';
@@ -29,6 +30,14 @@ function App() {
     };
   }, [tick]);
 
+  useEffect(() => {
+    const handler = (e: Event) => {
+      setActiveView((e as CustomEvent).detail as AppView);
+    };
+    window.addEventListener('neural-architect:navigate', handler);
+    return () => window.removeEventListener('neural-architect:navigate', handler);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header
@@ -44,6 +53,7 @@ function App() {
         activeView={activeView}
         onChangeView={setActiveView}
       />
+      <XpToast />
     </div>
   );
 }

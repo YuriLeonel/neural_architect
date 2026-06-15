@@ -6,7 +6,7 @@ function createTestStore() {
     getItem: () => null,
     setItem: () => {},
     removeItem: () => {},
-  };
+  } as any;
   return createPalaceStore(storage);
 }
 
@@ -32,8 +32,8 @@ describe('palaceStore', () => {
         expect(entry.source).toBe('tag');
       }
 
-      expect(entries[0].xpGained).toBe(50);
-      expect(entries[1].xpGained).toBe(50);
+      expect(entries[0]!.xpGained).toBe(50);
+      expect(entries[1]!.xpGained).toBe(50);
     });
 
     it('remainder XP goes to first tag(s)', () => {
@@ -41,26 +41,26 @@ describe('palaceStore', () => {
       const entries = store.getState().distributeXp('work', ['tag_a', 'tag_b'], 101);
 
       expect(entries).toHaveLength(2);
-      expect(entries[0].xpGained).toBe(51);
-      expect(entries[1].xpGained).toBe(50);
+      expect(entries[0]!.xpGained).toBe(51);
+      expect(entries[1]!.xpGained).toBe(50);
     });
 
     it('lastXpGained updates on subsequent distributions', () => {
       const store = createTestStore();
 
       store.getState().distributeXp('work', ['tag_a'], 100);
-      expect(store.getState().neurons['tag_a'].lastXpGained).toBe(100);
+      expect(store.getState().neurons['tag_a']!.lastXpGained).toBe(100);
 
       store.getState().distributeXp('work', ['tag_a'], 50);
-      expect(store.getState().neurons['tag_a'].lastXpGained).toBe(50);
+      expect(store.getState().neurons['tag_a']!.lastXpGained).toBe(50);
     });
 
     it('level-up sets leveledUp: true and lastLeveledUpAt', () => {
       const store = createTestStore();
       const entries = store.getState().distributeXp('work', ['tag_a'], 10000);
 
-      expect(entries[0].leveledUp).toBe(true);
-      expect(store.getState().neurons['tag_a'].lastLeveledUpAt).toEqual(expect.any(String));
+      expect(entries[0]!.leveledUp).toBe(true);
+      expect(store.getState().neurons['tag_a']!.lastLeveledUpAt).toEqual(expect.any(String));
     });
 
     it('non-finite / non-positive XP returns empty array', () => {
@@ -77,9 +77,9 @@ describe('palaceStore', () => {
       const entries = store.getState().distributeXp('study', [], 200);
 
       expect(entries).toHaveLength(1);
-      expect(entries[0].source).toBe('category');
-      expect(entries[0].sourceLabel).toBe('Study');
-      expect(entries[0].neuronId).toBe('cat:study');
+      expect(entries[0]!.source).toBe('category');
+      expect(entries[0]!.sourceLabel).toBe('Study');
+      expect(entries[0]!.neuronId).toBe('cat:study');
     });
 
     it('custom category with no tags returns empty', () => {
@@ -95,7 +95,7 @@ describe('palaceStore', () => {
       const entries = store.getState().distributeXp('work', ['tag_a'], 100);
 
       expect(store.getState().xpActivityLog).toHaveLength(1);
-      expect(store.getState().xpActivityLog[0]).toEqual(entries[0]);
+      expect(store.getState().xpActivityLog[0]!).toEqual(entries[0]!);
     });
 
     it('activity log caps at 50 entries', () => {
@@ -114,7 +114,7 @@ describe('palaceStore', () => {
       const store = createTestStore();
       store.getState().ensureNeuron('tag_test', 'Test');
 
-      const neuron = store.getState().neurons['tag_test'];
+      const neuron = store.getState().neurons['tag_test']!;
       expect(neuron).toBeDefined();
       expect(neuron.lastXpGained).toBe(0);
       expect(neuron.lastLeveledUpAt).toBeNull();
@@ -141,7 +141,7 @@ describe('palaceStore', () => {
         }),
         setItem: () => {},
         removeItem: () => {},
-      };
+      } as any;
       const store = createPalaceStore(staleStorage);
       const neuron = store.getState().neurons['tag_a']!;
       expect(neuron.lastXpGained).toBe(0);
@@ -159,7 +159,7 @@ describe('palaceStore', () => {
         }),
         setItem: () => {},
         removeItem: () => {},
-      };
+      } as any;
       const store = createPalaceStore(staleStorage);
       expect(store.getState().xpActivityLog).toEqual([]);
     });
@@ -189,7 +189,7 @@ describe('palaceStore', () => {
         }),
         setItem: () => {},
         removeItem: () => {},
-      };
+      } as any;
       const store = createPalaceStore(validStorage);
       expect(store.getState().xpActivityLog).toEqual(existingLog);
     });

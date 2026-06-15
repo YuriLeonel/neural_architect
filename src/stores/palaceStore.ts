@@ -100,6 +100,8 @@ export function createPalaceStore(storage: PersistOptions<PalaceStore>['storage'
             return [];
           }
 
+          const { neurons } = get();
+          const updatedNeurons = { ...neurons };
           const entries: XpActivityEntry[] = [];
           const now = new Date().toISOString();
 
@@ -107,102 +109,89 @@ export function createPalaceStore(storage: PersistOptions<PalaceStore>['storage'
             const baseXp = Math.floor(totalXp / tagIds.length);
             const remainder = totalXp - baseXp * tagIds.length;
 
-            set((state) => {
-              const updatedNeurons = { ...state.neurons };
-
-              tagIds.forEach((tagId, index) => {
-                const gainedXp = baseXp + (index < remainder ? 1 : 0);
-                const existing = updatedNeurons[tagId];
-                const neuron: NeuronState = existing ?? {
-                  id: tagId,
-                  label: getTagLabelFromId(tagId),
-                  totalXp: 0,
-                  level: 1,
-                  unlocked: false,
-                  lastXpGained: 0,
-                  lastLeveledUpAt: null,
-                };
-                const nextTotalXp = neuron.totalXp + gainedXp;
-                const newLevel = calculateLevel(nextTotalXp);
-                const leveledUp = newLevel > neuron.level;
-
-                updatedNeurons[tagId] = {
-                  ...neuron,
-                  totalXp: nextTotalXp,
-                  level: newLevel,
-                  unlocked: nextTotalXp > 0,
-                  lastXpGained: gainedXp,
-                  lastLeveledUpAt: leveledUp ? now : (neuron.lastLeveledUpAt ?? null),
-                };
-
-                entries.push({
-                  id: createId('xp_activity'),
-                  neuronLabel: neuron.label,
-                  neuronId: tagId,
-                  xpGained: gainedXp,
-                  source: 'tag',
-                  sourceLabel: neuron.label,
-                  sessionCategory: category,
-                  leveledUp,
-                  newLevel,
-                  occurredAt: now,
-                });
-              });
-
-              return { neurons: updatedNeurons };
-            });
-          } else if (category !== 'custom') {
-            const categoryNeuronId = getCategoryNeuronId(category);
-            const categoryLabel = CATEGORY_NEURON_LABELS[category];
-
-            set((state) => {
-              const existing = state.neurons[categoryNeuronId];
+            tagIds.forEach((tagId, index) => {
+              const gainedXp = baseXp + (index < remainder ? 1 : 0);
+              const existing = updatedNeurons[tagId];
               const neuron: NeuronState = existing ?? {
-                id: categoryNeuronId,
-                label: categoryLabel,
+                id: tagId,
+                label: getTagLabelFromId(tagId),
                 totalXp: 0,
                 level: 1,
                 unlocked: false,
                 lastXpGained: 0,
                 lastLeveledUpAt: null,
               };
-              const nextTotalXp = neuron.totalXp + totalXp;
+              const nextTotalXp = neuron.totalXp + gainedXp;
               const newLevel = calculateLevel(nextTotalXp);
               const leveledUp = newLevel > neuron.level;
+
+              updatedNeurons[tagId] = {
+                ...neuron,
+                totalXp: nextTotalXp,
+                level: newLevel,
+                unlocked: nextTotalXp > 0,
+                lastXpGained: gainedXp,
+                lastLeveledUpAt: leveledUp ? now : (neuron.lastLeveledUpAt ?? null),
+              };
 
               entries.push({
                 id: createId('xp_activity'),
                 neuronLabel: neuron.label,
-                neuronId: categoryNeuronId,
-                xpGained: totalXp,
-                source: 'category',
-                sourceLabel: categoryLabel,
+                neuronId: tagId,
+                xpGained: gainedXp,
+                source: 'tag',
+                sourceLabel: neuron.label,
                 sessionCategory: category,
                 leveledUp,
                 newLevel,
                 occurredAt: now,
               });
+            });
+          } else if (category !== 'custom') {
+            const categoryNeuronId = getCategoryNeuronId(category);
+            const categoryLabel = CATEGORY_NEURON_LABELS[category];
+            const existing = updatedNeurons[categoryNeuronId];
+            const neuron: NeuronState = existing ?? {
+              id: categoryNeuronId,
+              label: categoryLabel,
+              totalXp: 0,
+              level: 1,
+              unlocked: false,
+              lastXpGained: 0,
+              lastLeveledUpAt: null,
+            };
+            const nextTotalXp = neuron.totalXp + totalXp;
+            const newLevel = calculateLevel(nextTotalXp);
+            const leveledUp = newLevel > neuron.level;
 
-              return {
-                neurons: {
-                  ...state.neurons,
-                  [categoryNeuronId]: {
-                    ...neuron,
-                    totalXp: nextTotalXp,
-                    level: newLevel,
-                    unlocked: nextTotalXp > 0,
-                    lastXpGained: totalXp,
-                    lastLeveledUpAt: leveledUp ? now : (neuron.lastLeveledUpAt ?? null),
-                  },
-                },
-              };
+            updatedNeurons[categoryNeuronId] = {
+              ...neuron,
+              totalXp: nextTotalXp,
+              level: newLevel,
+              unlocked: nextTotalXp > 0,
+              lastXpGained: totalXp,
+              lastLeveledUpAt: leveledUp ? now : (neuron.lastLeveledUpAt ?? null),
+            };
+
+            entries.push({
+              id: createId('xp_activity'),
+              neuronLabel: neuron.label,
+              neuronId: categoryNeuronId,
+              xpGained: totalXp,
+              source: 'category',
+              sourceLabel: categoryLabel,
+              sessionCategory: category,
+              leveledUp,
+              newLevel,
+              occurredAt: now,
             });
           }
 
           if (entries.length > 0) {
-            set((state) => ({
-              xpActivityLog: [...state.xpActivityLog, ...entries].slice(-50),
-            }));
+            set({
+              neurons: updatedNeurons,
+              xpActivityLog: [...get().xpActivityLog, ...entries].slice(-50),
+            });
           }
 
           return entries;

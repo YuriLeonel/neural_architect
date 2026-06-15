@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { usePalaceStore, useTimerStore } from '@/stores/setup';
 import { NeuronNode } from './NeuronNode';
+import { NeuronPopover } from './NeuronPopover';
 import { calculatePositions, getActiveNeuronIds, sortNeurons } from './neuronUtils';
 
 export function NeuronMap() {
@@ -22,6 +23,13 @@ export function NeuronMap() {
     [sortedNeurons],
   );
 
+  const [selectedNeuronId, setSelectedNeuronId] = useState<string | null>(null);
+
+  const selectedNeuron = selectedNeuronId ? neurons[selectedNeuronId] ?? null : null;
+  const selectedPosition = selectedNeuronId && selectedNeuron
+    ? positionedNeurons.find((n) => n.neuron.id === selectedNeuronId) ?? null
+    : null;
+
   return (
     <section
       className="relative flex min-h-[30rem] flex-1 items-center justify-center overflow-hidden rounded-3xl border border-white/20 bg-black/30 p-4 shadow-2xl backdrop-blur-md sm:p-6"
@@ -40,10 +48,22 @@ export function NeuronMap() {
               style={{ left: `${x}%`, top: `${y}%` }}
               className="absolute -translate-x-1/2 -translate-y-1/2"
             >
-              <NeuronNode neuron={neuron} isActive={activeNeuronIds.has(neuron.id)} />
+              <NeuronNode
+                neuron={neuron}
+                isActive={activeNeuronIds.has(neuron.id)}
+                onClick={() => setSelectedNeuronId(neuron.id === selectedNeuronId ? null : neuron.id)}
+              />
             </div>
           ))}
         </div>
+      )}
+      {selectedNeuron && selectedPosition && (
+        <NeuronPopover
+          neuron={selectedNeuron}
+          x={selectedPosition.x}
+          y={selectedPosition.y}
+          onClose={() => setSelectedNeuronId(null)}
+        />
       )}
     </section>
   );

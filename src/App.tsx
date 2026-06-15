@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTimerStore } from '@/stores/setup';
 import { Header, MindPalaceView, SettingsSidebar, TimerView } from '@/components';
-import { XpToast } from '@/components/palace';
+import { SystemFlowView, XpToast } from '@/components/palace';
 import type { AppView } from '@/components/navigation';
 import { useTheme } from '@/hooks/useTheme';
 import { useWakeLock } from '@/hooks/useWakeLock';
@@ -45,7 +45,7 @@ function App() {
         onGoHome={() => setActiveView('timer')}
       />
       <main className="min-h-[calc(100vh-73px)] w-full">
-        {activeView === 'timer' ? <TimerView /> : <MindPalaceView />}
+        {activeView === 'timer' ? <TimerView /> : activeView === 'palace' ? <MindPalaceView /> : <SystemFlowView />}
       </main>
       <SettingsSidebar
         isOpen={isSettingsOpen}

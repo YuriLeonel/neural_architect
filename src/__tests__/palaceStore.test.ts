@@ -120,4 +120,78 @@ describe('palaceStore', () => {
       expect(neuron.lastLeveledUpAt).toBeNull();
     });
   });
+
+  describe('onRehydrateStorage', () => {
+    it('normalizes missing lastXpGained and lastLeveledUpAt on rehydration', () => {
+      const staleStorage = {
+        getItem: () => ({
+          state: {
+            neurons: {
+              tag_a: {
+                id: 'tag_a',
+                label: 'Tag A',
+                totalXp: 500,
+                level: 3,
+                unlocked: true,
+              },
+            },
+            xpActivityLog: [],
+          },
+          version: 0,
+        }),
+        setItem: () => {},
+        removeItem: () => {},
+      };
+      const store = createPalaceStore(staleStorage);
+      const neuron = store.getState().neurons['tag_a']!;
+      expect(neuron.lastXpGained).toBe(0);
+      expect(neuron.lastLeveledUpAt).toBeNull();
+    });
+
+    it('normalizes non-array xpActivityLog on rehydration', () => {
+      const staleStorage = {
+        getItem: () => ({
+          state: {
+            neurons: {},
+            xpActivityLog: 'invalid',
+          },
+          version: 0,
+        }),
+        setItem: () => {},
+        removeItem: () => {},
+      };
+      const store = createPalaceStore(staleStorage);
+      expect(store.getState().xpActivityLog).toEqual([]);
+    });
+
+    it('restores valid xpActivityLog on rehydration', () => {
+      const existingLog = [
+        {
+          id: 'entry_1',
+          neuronLabel: 'Tag A',
+          neuronId: 'tag_a',
+          xpGained: 100,
+          source: 'tag',
+          sourceLabel: 'Tag A',
+          sessionCategory: 'work',
+          leveledUp: true,
+          newLevel: 2,
+          occurredAt: '2026-01-01T00:00:00.000Z',
+        },
+      ];
+      const validStorage = {
+        getItem: () => ({
+          state: {
+            neurons: {},
+            xpActivityLog: existingLog,
+          },
+          version: 0,
+        }),
+        setItem: () => {},
+        removeItem: () => {},
+      };
+      const store = createPalaceStore(validStorage);
+      expect(store.getState().xpActivityLog).toEqual(existingLog);
+    });
+  });
 });

@@ -155,3 +155,77 @@ flowchart TD
 | Mind Palace XP distribution (tags-first, fallback, custom handling) | `src/stores/palaceStore.ts` |
 | Level progression curve and level calculation | `src/constants/evolution.ts`, `src/stores/palaceStore.ts` |
 | Storage parsing and client-side persistence boundary | `src/stores/setup.ts` |
+| Neuron popover and click-to-select interaction | `src/components/palace/NeuronPopover.tsx`, `NeuronNode.tsx`, `NeuronMap.tsx` |
+| XP toast display and dispatch wiring | `src/components/palace/XpToast.tsx`, `src/stores/setup.ts` |
+| Background evolution tiers (CSS overlays based on highest neuron level) | `src/components/palace/BackgroundLayer.tsx`, `src/constants/evolution.ts`, `src/index.css` |
+| System flow overview view | `src/components/palace/SystemFlowView.tsx` |
+| Type definitions for tracking fields and activity log | `src/types/palace.ts` |
+
+## Gamification Cohesion Features
+
+### Neuron Tracking Fields
+
+Each `NeuronState` now tracks two additional fields:
+
+- `lastXpGained` — the amount of XP the most recent session contributed to this neuron. Reset to `0` after rehydration if absent.
+- `lastLeveledUpAt` — ISO timestamp of the most recent level-up for this neuron. `null` if never leveled up, or after rehydration if absent.
+
+### XP Activity Log
+
+The MindPalaceState includes an `xpActivityLog: XpActivityEntry[]` array:
+
+- Each `XpActivityEntry` records who received XP, how much, from what source (tag/category), whether a level-up occurred, and when.
+- The log is capped at **50 entries** (oldest entries are dropped first).
+- Rehydration initializes `xpActivityLog` to `[]` if missing.
+
+### XP Toast
+
+After a focus session completes:
+
+- `distributeXp` returns `XpActivityEntry[]` for the entries created.
+- If entries exist, a toast appears in the bottom-left corner showing the XP breakdown per neuron.
+- The toast auto-dismisses after 6 seconds and can be dismissed early by clicking the close button.
+- The toast includes a "View in Mind Palace" link that navigates to the palace view.
+- Maximum 5 tag lines shown; additional entries are summarized as "and N more...".
+- Level-up events are marked with a star (✦) indicator.
+
+### Neuron Popover
+
+Clicking a neuron node in the NeuronMap opens a popover anchored to that node:
+
+- Shows the neuron label and level badge (color-coded by tier).
+- Displays a progress bar showing current XP vs. XP needed for next level.
+- Shows the last XP gained and, if applicable, the relative time since the last level-up.
+- Only one popover can be open at a time. Clicking outside or pressing Escape closes it.
+
+### Background Evolution
+
+The Mind Palace background layer now includes CSS-driven visual evolution based on the user's highest-level neuron:
+
+- `getProgressTier(highestLevel: number)` returns a tier from 1 to 5.
+- The tier is applied as a CSS class `palace-bg--tier-{n}` on the background element.
+- Each tier adds a subtle colored overlay via `::after` pseudo-element:
+  - Tier 1 (levels 1–4): Default — no overlay.
+  - Tier 2 (levels 5–9): Green tint.
+  - Tier 3 (levels 10–14): Purple tint.
+  - Tier 4 (levels 15–19): Amber tint.
+  - Tier 5 (levels 20+): Dual-color pink-indigo tint.
+- All overlays are subtle (opacity 0.08–0.12) and use pure CSS — no new images required.
+
+### System Flow View
+
+A third application view ("System Flow") provides an educational overview of the gamification system:
+
+- Single scrolling page with connected step cards.
+- Step 1: "Choose Your Session" — shows current category and tags.
+- Step 2: "Complete a Focus Session" — shows session duration and XP earned.
+- Step 3: "XP Finds Its Home" — flow diagram showing how tags/category map to neurons, with current neuron levels.
+- Step 4: "Neurons Grow" — neuron card with progress bar showing level-up mechanics.
+- Footer: "Your Progress" — total XP, unlocked neuron count, highest level.
+- All data reflects the user's current config in real time.
+
+### Navigation Updates
+
+- `AppView` type now includes `'system'` in addition to `'timer'` and `'palace'`.
+- ViewNavigation has three tabs: Timer, Mind Palace, and System Flow.
+- Grid layout adjusted from `grid-cols-2` to `grid-cols-3`.

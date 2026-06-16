@@ -4,17 +4,26 @@ import { getNeuronSize, getNeuronStyle } from './neuronUtils';
 interface NeuronNodeProps {
   neuron: NeuronState;
   isActive: boolean;
+  onClick?: () => void;
 }
 
-export function NeuronNode({ neuron, isActive }: NeuronNodeProps) {
+export function NeuronNode({ neuron, isActive, onClick }: NeuronNodeProps) {
   const unlocked = neuron.unlocked;
   const size = getNeuronSize(neuron.level);
   const style = getNeuronStyle(neuron.level, unlocked, isActive);
 
   return (
     <article
-      className="flex flex-col items-center gap-2 text-center"
+      className="flex cursor-pointer flex-col items-center gap-2 text-center"
       aria-label={`${neuron.label} neuron`}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
     >
       <div
         className={[

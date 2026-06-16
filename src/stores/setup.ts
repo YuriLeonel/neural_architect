@@ -5,6 +5,7 @@ import {
   createUserStatsStore,
 } from '@/stores';
 import type { TimerNotificationPayload } from '@/types';
+import { dispatchXpToast } from '@/components/palace/XpToast';
 import { sendTimerNotification } from '@/utils/notificationService';
 import { saveCustomBackground } from '@/utils/imageStorage';
 
@@ -60,7 +61,10 @@ export const useSessionStore = createSessionStore(storage);
 export const useTimerStore = createTimerStore(storage, {
   onFocusSessionCompleted: (record) => {
     useSessionStore.getState().recordSession(record);
-    usePalaceStore.getState().distributeXp(record.category, record.tagIds, record.xpEarned);
+    const entries = usePalaceStore.getState().distributeXp(record.category, record.tagIds, record.xpEarned);
+    if (entries.length > 0) {
+      dispatchXpToast(entries);
+    }
   },
   onPhaseCompleted: (completedPhase) => {
     const payload: TimerNotificationPayload =

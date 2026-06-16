@@ -116,6 +116,19 @@
   opacity: 0.88;
 }
 
+.palace-bg--tier-2::after {
+  background: linear-gradient(160deg, rgba(16, 185, 129, 0.08), transparent 50%);
+}
+.palace-bg--tier-3::after {
+  background: linear-gradient(160deg, rgba(139, 92, 246, 0.12), transparent 50%);
+}
+.palace-bg--tier-4::after {
+  background: linear-gradient(160deg, rgba(245, 158, 11, 0.10), rgba(245, 158, 11, 0.04) 60%);
+}
+.palace-bg--tier-5::after {
+  background: linear-gradient(160deg, rgba(244, 63, 94, 0.12), rgba(99, 102, 241, 0.06) 50%);
+}
+
 .palace-bg::before {
   content: '';
   position: absolute;

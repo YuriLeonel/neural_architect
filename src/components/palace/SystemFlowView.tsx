@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { usePalaceStore, useSessionStore, useTimerStore } from '@/stores/setup';
 import { getNeuronColor, calculateExperienceToNextLevel } from '@/constants/evolution';
 import type { NeuronState, SessionCategory, SessionTag } from '@/types';
+import { BackgroundLayer } from './BackgroundLayer';
 
 const CATEGORY_LABELS: Record<SessionCategory, string> = {
   work: 'Work',
@@ -30,6 +31,11 @@ export function SystemFlowView() {
   const config = useTimerStore((state) => state.config);
   const tags = useSessionStore((state) => state.tags);
   const neurons = usePalaceStore((state) => state.neurons);
+
+  const currentCategory = useTimerStore((state) => state.config.currentCategory);
+  const categoryBackgrounds = usePalaceStore((state) => state.categoryBackgrounds);
+  const customBackgroundUrl = usePalaceStore((state) => state.customBackgroundUrl);
+  const activeEnvironment = categoryBackgrounds[currentCategory];
 
   const activeTags = useMemo(
     () => config.activeTags.map((id) => tags[id]).filter((t): t is SessionTag => t !== undefined),
@@ -67,7 +73,10 @@ export function SystemFlowView() {
       className="relative min-h-[calc(100vh-73px)] w-full overflow-y-auto bg-background-secondary/20"
       aria-label="System Flow"
     >
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:px-8">
+      <BackgroundLayer environment={activeEnvironment} customBackgroundUrl={customBackgroundUrl} />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/45 via-black/35 to-black/50 pointer-events-none" aria-hidden="true" />
+
+      <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-8 sm:px-8">
         <div className="space-y-3 text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-white drop-shadow-sm">How It Works</h2>
           <p className="text-sm text-white/85">Your focus sessions power a living system of growth.</p>

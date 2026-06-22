@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Gamified Pomodoro web application",
+  "description": "Gamified Pomodoro app built with AI-assisted development, phase-gate workflows, spec-driven design, and TDD",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

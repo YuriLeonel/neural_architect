@@ -1,5 +1,7 @@
 # Neural Architect
 
+![AI-Assisted Development](https://img.shields.io/badge/AI--Assisted-Development-6366f1?style=flat-square)
+
 A gamified Pomodoro web application — built through AI-assisted development with disciplined phase-gate workflows, spec-driven design, and mandatory TDD.
 
 ## Overview
@@ -117,3 +119,16 @@ neural-architect/
 ## Theming
 
 Dark mode is controlled via `class="dark"` on `<html>`, toggled by the `useTheme` hook. Colors are defined as CSS custom properties in `src/index.css` under `:root` (light) and `.dark` (overrides). Tailwind `darkMode: 'class'` resolves these variables.
+
+## Development Workflow
+
+This project is built through AI-assisted development using [opencode](https://opencode.ai) with **superpowers skills** — a modular skill ecosystem that enforces disciplined engineering practices:
+
+- **Phase-gate model** (Gates 0→3): every task flows through investigation → plan → implementation → review, with mandatory stop points at each stage.
+- **Spec-driven development**: features are designed and documented in `docs/superpowers/specs/` before any code is written.
+- **Mandatory TDD** (Red-Green-Refactor): no production code without a failing test first.
+- **Plan-before-implement**: code changes require an approved written plan — no exceptions.
+- **GitHub Flow** with Conventional Commits and squash-merge PRs.
+- **Pre-commit gates**: tests must pass, lint must be clean, type-check must succeed.
+
+The full agent instructions live in [`AGENTS.md`](AGENTS.md), which serves as the development guide for AI contributors.

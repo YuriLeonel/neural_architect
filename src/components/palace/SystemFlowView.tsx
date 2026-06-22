@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { usePalaceStore, useSessionStore, useTimerStore } from '@/stores/setup';
-import { getNeuronColor, calculateExperienceToNextLevel } from '@/constants/evolution';
+import { getNeuronColor, calculateExperienceToNextLevel, calculateTotalExperienceForLevel } from '@/constants/evolution';
 import type { NeuronState, SessionCategory, SessionTag } from '@/types';
 import { BackgroundLayer } from './BackgroundLayer';
 
@@ -185,14 +185,14 @@ export function SystemFlowView() {
                 <div className="flex items-center justify-between text-xs text-white/50">
                   <span>Progress</span>
                   <span>
-                    {relevantNeuron.totalXp} / {calculateExperienceToNextLevel(relevantNeuron.level)} XP
+                    {relevantNeuron.totalXp - calculateTotalExperienceForLevel(relevantNeuron.level)} / {calculateExperienceToNextLevel(relevantNeuron.level)} XP
                   </span>
                 </div>
                 <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
-                      width: `${Math.min(100, (relevantNeuron.totalXp / calculateExperienceToNextLevel(relevantNeuron.level)) * 100)}%`,
+                      width: `${Math.min(100, ((relevantNeuron.totalXp - calculateTotalExperienceForLevel(relevantNeuron.level)) / calculateExperienceToNextLevel(relevantNeuron.level)) * 100)}%`,
                       backgroundColor: getNeuronColor(relevantNeuron.level),
                     }}
                   />

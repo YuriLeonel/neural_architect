@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   calculateExperienceToNextLevel,
+  calculateTotalExperienceForLevel,
   calculateLevel,
   calculateNeuronCount,
   getNeuronColor,
@@ -15,6 +16,24 @@ describe('calculateExperienceToNextLevel', () => {
 
   it('returns 282 for level 2 (floor(100 * 2^1.5))', () => {
     expect(calculateExperienceToNextLevel(2)).toBe(282);
+  });
+});
+
+describe('calculateTotalExperienceForLevel', () => {
+  it('returns 0 for level 1 (no XP needed to reach starting level)', () => {
+    expect(calculateTotalExperienceForLevel(1)).toBe(0);
+  });
+
+  it('returns 100 for level 2 (XP for level 1)', () => {
+    expect(calculateTotalExperienceForLevel(2)).toBe(100);
+  });
+
+  it('returns 382 for level 3 (100 + 282)', () => {
+    expect(calculateTotalExperienceForLevel(3)).toBe(382);
+  });
+
+  it('returns 901 for level 4 (100 + 282 + 519)', () => {
+    expect(calculateTotalExperienceForLevel(4)).toBe(901);
   });
 });
 

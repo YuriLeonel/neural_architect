@@ -97,7 +97,7 @@ Gate 3: Implementation done → All gates passed, present for review
 
 ### Spec-Driven Development
 
-Understand requirements before writing code. Read `docs/business-rules.md` and existing specs in `docs/superpowers/specs/`. Design the approach first, then implement. This happens at Gate 0 — before any investigation.
+Understand requirements before writing code. Read `docs/business-rules.md` and existing specs under `docs/superpowers/` (per-task directories with `-design.md` and `-plan.md` files). Design the approach first, then implement. This happens at Gate 0 — before any investigation.
 
 ### TDD — Mandatory
 

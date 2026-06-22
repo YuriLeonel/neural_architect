@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { calculateExperienceToNextLevel } from '@/constants/evolution';
+import { calculateExperienceToNextLevel, calculateTotalExperienceForLevel } from '@/constants/evolution';
 import type { NeuronState } from '@/types';
 
 interface NeuronPopoverProps {
@@ -27,8 +27,9 @@ export function NeuronPopover({ neuron, x, y, onClose }: NeuronPopoverProps) {
     };
   }, [onClose]);
 
+  const xpInLevel = neuron.totalXp - calculateTotalExperienceForLevel(neuron.level);
   const xpToNext = calculateExperienceToNextLevel(neuron.level);
-  const pct = Math.min(100, Math.round((neuron.totalXp / xpToNext) * 100));
+  const pct = Math.min(100, Math.round((xpInLevel / xpToNext) * 100));
   const maxLevel = neuron.level >= 50;
 
   return (
@@ -44,8 +45,8 @@ export function NeuronPopover({ neuron, x, y, onClose }: NeuronPopoverProps) {
       </div>
       <div className="mb-3">
         <div className="flex justify-between text-xs text-white/70 mb-1">
-          <span>{neuron.totalXp.toLocaleString()} XP</span>
-          {maxLevel ? <span>MAX LEVEL</span> : <span>{xpToNext.toLocaleString()} to next</span>}
+          {maxLevel ? <span>MAX LEVEL</span> : <span>{xpInLevel.toLocaleString()} / {xpToNext.toLocaleString()} XP</span>}
+          <span>{neuron.totalXp.toLocaleString()} total</span>
         </div>
         {!maxLevel && (
           <div className="h-2 rounded-full bg-white/10 overflow-hidden">

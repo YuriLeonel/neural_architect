@@ -1,6 +1,6 @@
 # Neural Architect
 
-A Pomodoro web application focused on completion momentum through gamified progression.
+A gamified Pomodoro web application — built through AI-assisted development with disciplined phase-gate workflows, spec-driven design, and mandatory TDD.
 
 ## Overview
 

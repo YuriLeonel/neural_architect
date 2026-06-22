@@ -58,11 +58,46 @@ Build includes type-check already.
 - Background images are responsive WebP files under `public/backgrounds/`.
 - Wake Lock API integration in `useWakeLock` hook keeps screen on during focus.
 
+## HARD RULES — Plan Before Implement
+
+**No code changes without an approved plan first.** This is not optional.
+
+- **Investigation is not a license to fix.** Finding the root cause does not authorize implementation.
+- After investigation (e.g. `systematic-debugging`), you MUST present findings in a concise summary and STOP.
+- You MUST ask the user explicitly: *"Here is the root cause and proposed approach. Shall I write a plan?"*
+- Do NOT proceed to design, planning, branching, or coding until the user responds.
+- **A single agent session MUST NOT cross the investigation→implementation boundary** without an explicit user confirmation in between.
+
+## Workflow Gates — Mandatory Stop Points
+
+Every task follows a **phase-gate model**. You MUST stop and present to the user at each gate. No auto-piloting through phases.
+
+```
+Gate 0: Task received → Understand requirements, read business rules
+Gate 1: Investigation complete → Present findings, STOP, ask for direction
+Gate 2: Plan written → Present plan (what + how + files), STOP, wait for approval
+Gate 3: Implementation done → All gates passed, present for review
+```
+
+| Gate # | Trigger | What You Must Do | Cannot Proceed Until |
+|--------|---------|------------------|---------------------|
+| 0 | Task received | Read `docs/business-rules.md`, understand scope | User confirms understanding |
+| 1 | Investigation done | Summarize root cause + proposed approach | User says "proceed" or "write plan" |
+| 2 | Plan drafted | Show plan with files changed + approach | User says "implement" or "go ahead" |
+| 3 | Code written | Tests pass, lint clean, build clean | Code review completed |
+
+## Branching Rule
+
+- **No code changes on `main`.** You must create a branch before any implementation.
+- Branch BEFORE the first edit, not after.
+- Branch naming: `fix/<short-desc>`, `feature/<short-desc>`, `refactor/<short-desc>`.
+- Present the branch name to the user before creating it.
+
 ## Development Methodology
 
 ### Spec-Driven Development
 
-Understand requirements before writing code. Read `docs/business-rules.md` and existing specs in `docs/superpowers/specs/`. Design the approach first, then implement.
+Understand requirements before writing code. Read `docs/business-rules.md` and existing specs in `docs/superpowers/specs/`. Design the approach first, then implement. This happens at Gate 0 — before any investigation.
 
 ### TDD — Mandatory
 
@@ -111,13 +146,15 @@ Invoke `superpowers:test-driven-development` for every implementation. Red-Green
 
 ## Skill Orchestration
 
-| Task Type | Required Skill Sequence |
-|---|---|
-| New feature | `brainstorming` (if creative/design) → `writing-plans` (if multi-step) → `subagent-driven-development` (each sub-task uses TDD) → `verification-before-completion` → `requesting-code-review` |
-| Bug fix | `systematic-debugging` → TDD → `verification-before-completion` → `requesting-code-review` |
-| Refactoring | TDD → `verification-before-completion` → `requesting-code-review` |
-| Documentation | `writing-skills` if creating or editing skills |
-| Wrapping up | `finishing-a-development-branch` |
+Every skill invocation MUST respect the Workflow Gates above. A skill transition that crosses a gate boundary requires explicit user confirmation.
+
+| Task Type | Required Skill Sequence | Gate After Each Phase |
+|---|---|---|
+| New feature | `brainstorming` (if design) → `writing-plans` (if multi-step) → branch → TDD → `verification-before-completion` → `requesting-code-review` | G0→G1→G2→G3 |
+| Bug fix | `systematic-debugging` → present findings → `writing-plans` → branch → TDD → `verification-before-completion` → `requesting-code-review` | G1→G2→G3 |
+| Refactoring | TDD → `verification-before-completion` → `requesting-code-review` | G2→G3 |
+| Documentation | `writing-skills` if creating or editing skills | G2→G3 |
+| Wrapping up | `finishing-a-development-branch` | G3 |
 
 ## Workflow Rules (Kanban-Inspired)
 

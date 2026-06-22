@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { usePalaceStore, useSessionStore, useTimerStore } from '@/stores/setup';
-import { getNeuronColor, calculateExperienceToNextLevel } from '@/constants/evolution';
+import { getNeuronColor, calculateExperienceToNextLevel, calculateTotalExperienceForLevel } from '@/constants/evolution';
 import type { NeuronState, SessionCategory, SessionTag } from '@/types';
 import { BackgroundLayer } from './BackgroundLayer';
 
@@ -181,23 +181,15 @@ export function SystemFlowView() {
                   Level {relevantNeuron.level}
                 </span>
               </div>
-              <div className="mb-2">
-                <div className="flex items-center justify-between text-xs text-white/50">
-                  <span>Progress</span>
-                  <span>
-                    {relevantNeuron.totalXp} / {calculateExperienceToNextLevel(relevantNeuron.level)} XP
-                  </span>
-                </div>
-                <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-white/10">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${Math.min(100, (relevantNeuron.totalXp / calculateExperienceToNextLevel(relevantNeuron.level)) * 100)}%`,
-                      backgroundColor: getNeuronColor(relevantNeuron.level),
-                    }}
-                  />
-                </div>
-              </div>
+              {relevantNeuron.level >= 50 ? (
+                <p className="text-xs text-white/50">MAX LEVEL</p>
+              ) : (
+                <ProgressBar
+                  xpInLevel={relevantNeuron.totalXp - calculateTotalExperienceForLevel(relevantNeuron.level)}
+                  xpToNext={calculateExperienceToNextLevel(relevantNeuron.level)}
+                  color={getNeuronColor(relevantNeuron.level)}
+                />
+              )}
               {relevantNeuron.lastLeveledUpAt && (
                 <p className="text-xs text-white/50">
                   Last leveled up{' '}
@@ -237,5 +229,27 @@ export function SystemFlowView() {
         </div>
       </div>
     </section>
+  );
+}
+
+function ProgressBar({ xpInLevel, xpToNext, color }: { xpInLevel: number; xpToNext: number; color: string }) {
+  return (
+    <div className="mb-2">
+      <div className="flex items-center justify-between text-xs text-white/50">
+        <span>Progress</span>
+        <span>
+          {xpInLevel} / {xpToNext} XP
+        </span>
+      </div>
+      <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-white/10">
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{
+            width: `${Math.min(100, (xpInLevel / xpToNext) * 100)}%`,
+            backgroundColor: color,
+          }}
+        />
+      </div>
+    </div>
   );
 }

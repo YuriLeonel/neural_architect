@@ -2,7 +2,7 @@
 
 ## Goal
 
-Update the README and repository metadata to communicate that Neural Architect is built through AI-assisted development using superpowers skills and a structured engineering workflow.
+Update the README and repository metadata to communicate that Neural Architect is built through AI-assisted development with agent skills and a structured engineering workflow.
 
 ## Audience
 
@@ -43,10 +43,10 @@ Color `#6366f1` matches the project's primary indigo brand color.
 ```markdown
 ## Development Workflow
 
-This project is built through AI-assisted development using [opencode](https://opencode.ai) with **superpowers skills** — a modular skill ecosystem that enforces disciplined engineering practices:
+This project is built through AI-assisted development with agent skills that enforce disciplined engineering practices:
 
 - **Phase-gate model** (Gates 0→3): every task flows through investigation → plan → implementation → review, with mandatory stop points at each stage.
-- **Spec-driven development**: features are designed and documented in `docs/superpowers/specs/` before any code is written.
+- **Spec-driven development**: features are designed and documented in `docs/specs/` before any code is written.
 - **Mandatory TDD** (Red-Green-Refactor): no production code without a failing test first.
 - **Plan-before-implement**: code changes require an approved written plan — no exceptions.
 - **GitHub Flow** with Conventional Commits and squash-merge PRs.

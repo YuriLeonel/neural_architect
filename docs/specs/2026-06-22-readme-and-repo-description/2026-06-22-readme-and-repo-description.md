@@ -1,6 +1,6 @@
 # README & Repository Description Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use the spec-driven Execute phase to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Update README tagline, add badge, add Development Workflow section, and update `package.json` description.
 
@@ -82,10 +82,10 @@ After line 119 (last line), append:
 ```markdown
 ## Development Workflow
 
-This project is built through AI-assisted development using [opencode](https://opencode.ai) with **superpowers skills** — a modular skill ecosystem that enforces disciplined engineering practices:
+This project is built through AI-assisted development with agent skills that enforce disciplined engineering practices:
 
 - **Phase-gate model** (Gates 0→3): every task flows through investigation → plan → implementation → review, with mandatory stop points at each stage.
-- **Spec-driven development**: features are designed and documented in `docs/superpowers/specs/` before any code is written.
+- **Spec-driven development**: features are designed and documented in `docs/specs/` before any code is written.
 - **Mandatory TDD** (Red-Green-Refactor): no production code without a failing test first.
 - **Plan-before-implement**: code changes require an approved written plan — no exceptions.
 - **GitHub Flow** with Conventional Commits and squash-merge PRs.

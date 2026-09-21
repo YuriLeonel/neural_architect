@@ -122,12 +122,14 @@ Dark mode is controlled via `class="dark"` on `<html>`, toggled by the `useTheme
 
 ## Development Workflow
 
-This project is built through AI-assisted development using [opencode](https://opencode.ai) with **superpowers skills** — a modular skill ecosystem that enforces disciplined engineering practices:
+This project is built through AI-assisted development with agent skills that enforce disciplined engineering practices (installed under `.agents/skills/`):
 
+- **Idea alignment**: a `grill-me`/`grilling` session interviews a loose idea into a shared understanding before planning.
 - **Phase-gate model** (Gates 0→3): every task flows through investigation → plan → implementation → review, with mandatory stop points at each stage.
-- **Spec-driven development**: features are designed and documented in `docs/superpowers/specs/` before any code is written.
+- **Spec-driven development**: features are planned with `tlc-spec-driven` (Specify → Design → Tasks → Execute). Historical specs live in `docs/specs/`; new ones are produced under `.specs/`.
 - **Mandatory TDD** (Red-Green-Refactor): no production code without a failing test first.
 - **Plan-before-implement**: code changes require an approved written plan — no exceptions.
+- **Code review**: `caveman-review` compresses findings into one line per issue with a severity tag.
 - **GitHub Flow** with Conventional Commits and squash-merge PRs.
 - **Pre-commit gates**: tests must pass, lint must be clean, type-check must succeed.
 

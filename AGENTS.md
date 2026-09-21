@@ -63,7 +63,7 @@ Build includes type-check already.
 **No code changes without an approved plan first.** This is not optional.
 
 - **Investigation is not a license to fix.** Finding the root cause does not authorize implementation.
-- After investigation (e.g. `systematic-debugging`), you MUST present findings in a concise summary and STOP.
+- After investigation, you MUST present findings in a concise summary and STOP.
 - You MUST ask the user explicitly: *"Here is the root cause and proposed approach. Shall I write a plan?"*
 - Do NOT proceed to design, planning, branching, or coding until the user responds.
 - **A single agent session MUST NOT cross the investigation→implementation boundary** without an explicit user confirmation in between.
@@ -97,11 +97,14 @@ Gate 3: Implementation done → All gates passed, present for review
 
 ### Spec-Driven Development
 
-Understand requirements before writing code. Read `docs/business-rules.md` and existing specs under `docs/superpowers/` (per-task directories with `-design.md` and `-plan.md` files). Design the approach first, then implement. This happens at Gate 0 — before any investigation.
+- **Idea alignment**: before planning, run a `grill-me` / `grilling` session to interview a loose idea into a shared understanding. Stateless — writes no files.
+- **Feature workflow**: use the `tlc-spec-driven` skill — 4 adaptive phases (`Specify → Design → Tasks → Execute`) auto-sized to scope, with EARS requirements, atomic tasks, deterministic validators, and an independent Verifier. Its artifacts live under `.specs/`.
+- Historical, repo-approved specs remain under `docs/specs/` (per-feature directories with `-design.md` and `-plan.md` files).
+- This happens at Gate 0 — before any investigation.
 
 ### TDD — Mandatory
 
-Invoke `superpowers:test-driven-development` for every implementation. Red-Green-Refactor. No production code without a failing test first. This is not optional.
+Red-Green-Refactor, enforced inside the `tlc-spec-driven` Execute phase. Tests derive from the spec's acceptance criteria and never mirror the implementation; they are never weakened or deleted to pass. No production code without a failing test first. This is not optional.
 
 ### Clean Code
 
@@ -125,7 +128,7 @@ Invoke `superpowers:test-driven-development` for every implementation. Red-Green
 - **Branch naming**: `feature/<short-desc>`, `fix/<short-desc>`, `refactor/<short-desc>`, `docs/<short-desc>`, `chore/<short-desc>`.
 - **Commits**: Conventional Commits format — `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`, `style:`. Imperative mood, capitalized, no trailing period.
 - **PRs**: Small, focused, single concern. Self-review the diff before requesting review. Squash-merge to `main`. Delete branch after merge.
-- **Code review**: Use `superpowers:requesting-code-review` before merging. Review for correctness, clarity, test coverage, and security.
+- **Code review**: Run `caveman-review` before merging — one line per finding (`L<line>: <problem>. <fix>.`, with `🔴 bug` / `🟡 risk` / `🔵 nit` / `❓ q` severity). Security findings and onboarding contexts use full sentences. Review for correctness, clarity, test coverage, and security.
 
 ## Code Quality Standards
 
@@ -150,11 +153,11 @@ Every skill invocation MUST respect the Workflow Gates above. A skill transition
 
 | Task Type | Required Skill Sequence | Gate After Each Phase |
 |---|---|---|
-| New feature | `brainstorming` (if design) → `writing-plans` (if multi-step) → branch → TDD → `verification-before-completion` → `requesting-code-review` | G0→G1→G2→G3 |
-| Bug fix | `systematic-debugging` → present findings → `writing-plans` → branch → TDD → `verification-before-completion` → `requesting-code-review` | G1→G2→G3 |
-| Refactoring | TDD → `verification-before-completion` → `requesting-code-review` | G2→G3 |
-| Documentation | `writing-skills` if creating or editing skills | G2→G3 |
-| Wrapping up | `finishing-a-development-branch` | G3 |
+| New feature | `grill-me` (idea alignment, if loose) → `tlc-spec-driven` (Specify→Design→Tasks→Execute) → `caveman-review` | G1→G2→G3 |
+| Bug fix | investigate root cause → present findings → `tlc-spec-driven` (Tasks→Execute) → `caveman-review` | G1→G2→G3 |
+| Refactoring | `tlc-spec-driven` (TDD) → `caveman-review` | G2→G3 |
+| Documentation | `tlc-spec-driven` (small/medium) | G2→G3 |
+| Wrapping up | GitHub Flow: squash-merge to `main`, delete branch | G3 |
 
 ## Workflow Rules (Kanban-Inspired)
 

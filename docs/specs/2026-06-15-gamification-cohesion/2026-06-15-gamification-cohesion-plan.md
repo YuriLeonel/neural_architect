@@ -1,6 +1,6 @@
 # Gamification Cohesion Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use the spec-driven Execute phase to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make the gamification system cohesive by adding neuron progress visibility, live XP attribution, background evolution, and a system flow view.
 

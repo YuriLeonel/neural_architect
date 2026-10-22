@@ -21,6 +21,7 @@ export interface Achievement {
 export interface UserPreferences {
   soundEnabled: boolean;
   notificationsEnabled: boolean;
+  vibrationEnabled: boolean;
   theme: 'light' | 'dark' | 'auto';
   defaultWorkDuration: number;
   defaultBreakDuration: number;

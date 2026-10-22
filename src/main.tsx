@@ -5,6 +5,12 @@ import './index.css';
 import { getResponsiveBackgroundUrl } from './utils/backgroundImages';
 import type { EnvironmentType, SessionCategory } from './types';
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
 (function injectBackgroundPreload() {
   try {
     const palaceRaw = localStorage.getItem('neural-architect-palace');

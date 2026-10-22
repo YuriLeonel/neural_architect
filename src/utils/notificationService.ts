@@ -1,4 +1,6 @@
 import type { TimerNotificationPayload } from '../types';
+import { playCompletionChime } from './audioService';
+import { playCompletionVibration } from './vibrationService';
 
 interface NotificationContent {
   readonly title: string;
@@ -25,7 +27,7 @@ function getNotificationContent(payload: TimerNotificationPayload): Notification
 }
 
 export function isNotificationSupported(): boolean {
-  return typeof window !== 'undefined' && 'Notification' in window;
+  return typeof Notification !== 'undefined';
 }
 
 export async function requestPermission(): Promise<NotificationPermission> {
@@ -41,7 +43,13 @@ export async function requestPermission(): Promise<NotificationPermission> {
   }
 }
 
-export function sendTimerNotification(payload: TimerNotificationPayload): void {
+interface NotificationPreferences {
+  readonly notificationsEnabled: boolean;
+  readonly soundEnabled: boolean;
+  readonly vibrationEnabled: boolean;
+}
+
+function sendBrowserNotification(payload: TimerNotificationPayload): void {
   if (!isNotificationSupported()) {
     return;
   }
@@ -56,5 +64,22 @@ export function sendTimerNotification(payload: TimerNotificationPayload): void {
     new Notification(content.title, { body: content.body });
   } catch (error) {
     console.warn('Notification delivery failed:', error);
+  }
+}
+
+export function notifyPhaseCompletion(
+  payload: TimerNotificationPayload,
+  preferences: NotificationPreferences,
+): void {
+  if (preferences.notificationsEnabled) {
+    sendBrowserNotification(payload);
+  }
+
+  if (preferences.soundEnabled) {
+    playCompletionChime();
+  }
+
+  if (preferences.vibrationEnabled) {
+    playCompletionVibration();
   }
 }

@@ -6,7 +6,7 @@ import {
 } from '@/stores';
 import type { TimerNotificationPayload } from '@/types';
 import { dispatchXpToast } from '@/components/palace/XpToast';
-import { sendTimerNotification } from '@/utils/notificationService';
+import { notifyPhaseCompletion } from '@/utils/notificationService';
 import { saveCustomBackground } from '@/utils/imageStorage';
 
 function createJsonStorageAdapter() {
@@ -72,6 +72,11 @@ export const useTimerStore = createTimerStore(storage, {
         ? { type: 'FOCUS_COMPLETE' }
         : { type: 'BREAK_COMPLETE' };
 
-    sendTimerNotification(payload);
+    const preferences = useUserStatsStore.getState().preferences;
+    notifyPhaseCompletion(payload, {
+      notificationsEnabled: preferences.notificationsEnabled,
+      soundEnabled: preferences.soundEnabled,
+      vibrationEnabled: preferences.vibrationEnabled,
+    });
   },
 });

@@ -1,16 +1,25 @@
 let audioContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext | null {
-  const AudioContextClass =
-    (globalThis as unknown as { AudioContext?: typeof AudioContext }).AudioContext ||
-    (globalThis as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-
-  if (!AudioContextClass) {
+  if (typeof AudioContext === 'undefined' && typeof (globalThis as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext === 'undefined') {
     return null;
   }
 
   if (audioContext) {
-    return audioContext;
+    if (audioContext.state === 'closed') {
+      audioContext = null;
+    } else {
+      return audioContext;
+    }
+  }
+
+  const AudioContextClass =
+    typeof AudioContext !== 'undefined'
+      ? AudioContext
+      : (globalThis as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+  if (!AudioContextClass) {
+    return null;
   }
 
   try {

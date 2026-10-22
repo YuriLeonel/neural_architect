@@ -2,9 +2,8 @@ import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsAc
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
 import VibrationOutlinedIcon from '@mui/icons-material/VibrationOutlined';
 import { useUserStatsStore } from '@/stores/setup';
-import { isNotificationSupported, requestPermission } from '@/utils/notificationService';
+import { isNotificationSupported, requestPermission, notifyPhaseCompletion } from '@/utils/notificationService';
 import { isVibrationSupported } from '@/utils/vibrationService';
-import { notifyPhaseCompletion } from '@/utils/notificationService';
 
 interface ToggleProps {
   readonly label: string;
@@ -68,10 +67,13 @@ export function PreferencesSection() {
   const vibrationSupported = isVibrationSupported();
 
   const handleNotificationToggle = async (checked: boolean) => {
-    updatePreferences({ notificationsEnabled: checked });
     if (checked && notificationSupported) {
-      await requestPermission();
+      const permission = await requestPermission();
+      if (permission !== 'granted') {
+        return;
+      }
     }
+    updatePreferences({ notificationsEnabled: checked });
   };
 
   const handleTest = () => {

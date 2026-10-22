@@ -12,5 +12,6 @@ export function playCompletionVibration(): void {
   try {
     navigator.vibrate(VIBRATION_PATTERN);
   } catch {
+    // Vibration failure is non-critical
   }
 }

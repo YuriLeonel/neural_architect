@@ -14,6 +14,7 @@ export interface UserStatsStore extends UserStats {
 const defaultPreferences: UserPreferences = {
   soundEnabled: true,
   notificationsEnabled: true,
+  vibrationEnabled: true,
   theme: 'dark',
   defaultWorkDuration: 25,
   defaultBreakDuration: 5,
@@ -97,6 +98,14 @@ export function createUserStatsStore(storage: PersistOptions<UserStatsStore>['st
       {
         name: 'neural-architect-user-stats',
         storage,
+        onRehydrateStorage: () => (state) => {
+          if (state) {
+            const prefs = state.preferences;
+            if (prefs.vibrationEnabled === undefined) {
+              state.preferences = { ...prefs, vibrationEnabled: true };
+            }
+          }
+        },
       },
     ),
   );

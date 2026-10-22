@@ -4,6 +4,7 @@ import { ViewNavigation, type AppView } from '@/components/navigation';
 import { BackgroundPicker } from './BackgroundPicker';
 import { CategorySelector } from './CategorySelector';
 import { IntervalConfig } from './IntervalConfig';
+import { PreferencesSection } from './PreferencesSection';
 
 interface SettingsSidebarProps {
   isOpen: boolean;
@@ -108,6 +109,13 @@ export function SettingsSidebar({
                 Intervals
               </h3>
               <IntervalConfig />
+            </section>
+
+            <section aria-label="Alert preferences" className="space-y-3">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Alerts
+              </h3>
+              <PreferencesSection />
             </section>
           </div>
         </div>
